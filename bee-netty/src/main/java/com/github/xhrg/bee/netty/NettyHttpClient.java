@@ -9,7 +9,9 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.net.SocketAddress;
 
 public class NettyHttpClient {
-    public void init(SocketAddress remoteAddress, EventLoopGroup group) {
+
+
+    public void create(SocketAddress remoteAddress, EventLoopGroup group) {
         Bootstrap cb = new Bootstrap().group(group)
                 .channel(NioSocketChannel.class)
                 .handler(new ChannelInitializer<Channel>() {
@@ -19,4 +21,5 @@ public class NettyHttpClient {
                 });
         cb.connect(remoteAddress);
     }
+
 }

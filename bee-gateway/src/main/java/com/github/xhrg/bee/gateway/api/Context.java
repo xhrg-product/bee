@@ -17,4 +17,12 @@ public class Context {
         return map.get(key);
     }
 
+
+    public String getChannelId() {
+        return channelId;
+    }
+
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
+    }
 }

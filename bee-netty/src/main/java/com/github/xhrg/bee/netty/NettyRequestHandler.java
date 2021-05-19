@@ -1,15 +1,15 @@
 package com.github.xhrg.bee.netty;
 
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandler;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
 
-@ChannelHandler.Sharable
-public class NettyRequestHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+public abstract class NettyRequestHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+
+    protected abstract void doReaderHttpRequest(FullHttpRequest req, FullHttpResponse response, Channel channel);
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -19,11 +19,11 @@ public class NettyRequestHandler extends SimpleChannelInboundHandler<FullHttpReq
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req) throws Exception {
+        //创建一个默认的FullHttpResponse
         FullHttpResponse response = new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1,
                 HttpResponseStatus.OK,
-                Unpooled.copiedBuffer("nihao", CharsetUtil.UTF_8));
-        response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html; charset=UTF-8");
-        ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+                Unpooled.copiedBuffer("", CharsetUtil.UTF_8));
+        doReaderHttpRequest(req, response, ctx.channel());
     }
 }
