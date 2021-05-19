@@ -1,0 +1,16 @@
+##IDEA
+.idea
+*.iml
+.mvn
+
+##eclipse
+*.project
+*.classpath
+.settings
+
+##子项目的gitignore
+*.gitignore
+
+*.class
+
+*/target
