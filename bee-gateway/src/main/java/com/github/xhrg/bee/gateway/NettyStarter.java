@@ -1,7 +1,7 @@
 package com.github.xhrg.bee.gateway;
 
 import com.github.xhrg.bee.gateway.heandler.HttpHandler;
-import com.github.xhrg.bee.netty.NettyHttpServer;
+import com.github.xhrg.bee.gateway.netty.NettyHttpServer;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 

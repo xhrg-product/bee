@@ -8,7 +8,6 @@
         <module>bee-gateway</module>
         <module>bee-admin</module>
         <module>bee-basic</module>
-        <module>bee-netty</module>
     </modules>
 
     <groupId>com.github.xhrg</groupId>

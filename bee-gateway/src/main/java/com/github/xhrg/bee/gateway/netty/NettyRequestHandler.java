@@ -1,5 +1,6 @@
-package com.github.xhrg.bee.netty;
+package com.github.xhrg.bee.gateway.netty;
 
+import com.github.xhrg.bee.gateway.api.Context;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -9,7 +10,7 @@ import io.netty.util.CharsetUtil;
 
 public abstract class NettyRequestHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
-    protected abstract void doReaderHttpRequest(FullHttpRequest req, FullHttpResponse response, Channel channel);
+    protected abstract void doReaderHttpRequest(FullHttpRequest req, FullHttpResponse response, Context context);
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -24,6 +25,8 @@ public abstract class NettyRequestHandler extends SimpleChannelInboundHandler<Fu
                 HttpVersion.HTTP_1_1,
                 HttpResponseStatus.OK,
                 Unpooled.copiedBuffer("", CharsetUtil.UTF_8));
-        doReaderHttpRequest(req, response, ctx.channel());
+
+        Context context = new Context();
+        doReaderHttpRequest(req, response, context);
     }
 }

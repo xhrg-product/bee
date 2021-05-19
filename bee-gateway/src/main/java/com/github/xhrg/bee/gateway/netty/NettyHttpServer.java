@@ -1,4 +1,4 @@
-package com.github.xhrg.bee.netty;
+package com.github.xhrg.bee.gateway.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
