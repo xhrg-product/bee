@@ -7,9 +7,7 @@ public interface Filter {
 
     String name();
 
-    //pre or post
-    //pre表示前置处理，post表示后置处理
-    String type();
+    FilterType type();
 
     boolean doFilter(FullHttpRequest request,
                      FullHttpResponse response, Context context);

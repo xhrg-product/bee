@@ -1,6 +1,5 @@
-package com.github.xhrg.bee.gateway.netty;
+package com.github.xhrg.bee.gateway.netty.front;
 
-import com.github.xhrg.bee.gateway.heandler.HttpFrontHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;

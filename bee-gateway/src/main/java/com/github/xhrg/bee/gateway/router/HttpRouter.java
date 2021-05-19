@@ -2,12 +2,9 @@ package com.github.xhrg.bee.gateway.router;
 
 import com.github.xhrg.bee.gateway.api.Context;
 import com.github.xhrg.bee.gateway.api.Router;
-import com.github.xhrg.bee.gateway.cache.ChannelCache;
-import com.github.xhrg.bee.gateway.netty.NettyHttpClient;
-import com.sun.tracing.dtrace.Attributes;
+import com.github.xhrg.bee.gateway.netty.back.NettyHttpClient;
 import io.netty.channel.Channel;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +20,7 @@ public class HttpRouter implements Router {
 
     @Override
     public void doRouter(FullHttpRequest request, FullHttpResponse response, Context context) {
-        Channel channel = context.get(CHANNEL_KEY);
-        Channel channel1 = nettyHttpClient.create("", channel);
-        channel1.writeAndFlush(request);
+        Channel channelFront = context.getChannelFront();
+        nettyHttpClient.write(request, channelFront, "www.baidu.com");
     }
 }
