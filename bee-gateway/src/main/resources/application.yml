@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: "demo-service"
+  datasource:
+    url: "jdbc:mysql://localhost/demo_db"
+    username: "root"
+    password: "123456"

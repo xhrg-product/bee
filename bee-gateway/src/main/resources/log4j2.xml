@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="APP_ID" value="demo-service"/>
+        <Property name="LOG_PATH" value="${sys:user.home}/data/logs/${APP_ID}"/>
+    </Properties>
+    <Appenders>
+        <RollingFile name="RollingFile" fileName="${LOG_PATH}/app.log"
+                     filePattern="${LOG_PATH}/app_%d{yyyyMMdd}_%i.log">
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="1GB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="5">
+                <Delete basePath="${LOG_PATH}" maxDepth="1">
+                    <IfFileName glob="app_*.log"/>
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <AsyncRoot level="INFO">
+            <AppenderRef ref="RollingFile"/>
+            <AppenderRef ref="Console"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>

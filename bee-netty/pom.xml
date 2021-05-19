@@ -5,21 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.github.xhrg</groupId>
         <artifactId>bee</artifactId>
+        <groupId>com.github.xhrg</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>bee-gateway</artifactId>
+    <artifactId>bee-netty</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>bee-gateway</name>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.github.xhrg</groupId>
-            <artifactId>bee-netty</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
 
 </project>

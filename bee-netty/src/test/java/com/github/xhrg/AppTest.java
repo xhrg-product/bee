@@ -1,4 +1,4 @@
-package com.github.xhrg.gateway;
+package com.github.xhrg;
 
 import static org.junit.Assert.assertTrue;
 
