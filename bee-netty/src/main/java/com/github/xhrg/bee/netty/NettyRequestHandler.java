@@ -7,15 +7,14 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
-import org.springframework.stereotype.Component;
 
-@Component
 @ChannelHandler.Sharable
-public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+public class NettyRequestHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
+        String id = ctx.channel().id().asLongText();
     }
 
     @Override

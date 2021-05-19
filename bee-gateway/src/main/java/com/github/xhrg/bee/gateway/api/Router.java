@@ -5,7 +5,7 @@ import io.netty.handler.codec.http.FullHttpResponse;
 
 public interface Router {
 
-    boolean doFilter(FullHttpRequest request,
+    boolean doRouter(FullHttpRequest request,
                      FullHttpResponse response, Context context);
 
 }

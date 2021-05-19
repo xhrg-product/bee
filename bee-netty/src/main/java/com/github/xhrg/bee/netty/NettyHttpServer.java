@@ -8,19 +8,16 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 
-public class NettyHttpServer implements ApplicationRunner {
+public class NettyHttpServer {
 
-    private HttpRequestHandler httpRequestHandler;
+    private NettyRequestHandler httpRequestHandler;
 
-    public NettyHttpServer(HttpRequestHandler httpRequestHandler) {
+    public NettyHttpServer(NettyRequestHandler httpRequestHandler) {
         this.httpRequestHandler = httpRequestHandler;
     }
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void start() throws Exception {
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         //boss线程一般是1，如果你是多端口监听，才是大于1的值
         NioEventLoopGroup boss = new NioEventLoopGroup(1);
