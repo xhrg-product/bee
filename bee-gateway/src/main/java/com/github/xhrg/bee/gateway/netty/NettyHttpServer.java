@@ -1,5 +1,6 @@
 package com.github.xhrg.bee.gateway.netty;
 
+import com.github.xhrg.bee.gateway.heandler.HttpFrontHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -8,13 +9,20 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
 
-public class NettyHttpServer {
+@Component
+public class NettyHttpServer implements ApplicationRunner {
 
-    private NettyRequestHandler httpRequestHandler;
+    @Autowired
+    private HttpFrontHandler httpFrontHandler;
 
-    public NettyHttpServer(NettyRequestHandler httpRequestHandler) {
-        this.httpRequestHandler = httpRequestHandler;
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        this.start();
     }
 
     public void start() throws Exception {
@@ -31,10 +39,12 @@ public class NettyHttpServer {
                         pipe.addLast("encoder", new HttpResponseEncoder());
                         pipe.addLast("decoder", new HttpRequestDecoder());
                         pipe.addLast("aggregator", new HttpObjectAggregator(10 * 1024 * 1024));
-                        pipe.addLast(httpRequestHandler);
+                        pipe.addLast(httpFrontHandler);
                     }
                 })
                 .bind(8000);
         System.out.println("netty http start");
     }
+
+
 }
