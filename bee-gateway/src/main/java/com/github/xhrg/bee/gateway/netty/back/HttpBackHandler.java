@@ -41,7 +41,7 @@ public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpRespons
     }
 
     public void doReaderHttpRequest(FullHttpRequest req, FullHttpResponse response, Context context) {
-        Channel channel = channelCache.getByBack(context.getChannelFront());
+        Channel channel = channelCache.getByBack(context.getChannelBack());
         channel.writeAndFlush(response.retain());
     }
 }

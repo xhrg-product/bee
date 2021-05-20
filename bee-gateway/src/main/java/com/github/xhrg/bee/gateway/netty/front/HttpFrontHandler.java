@@ -2,7 +2,9 @@ package com.github.xhrg.bee.gateway.netty.front;
 
 import com.github.xhrg.bee.gateway.api.Context;
 import com.github.xhrg.bee.gateway.cache.ContextCache;
+import com.github.xhrg.bee.gateway.caller.Caller;
 import com.github.xhrg.bee.gateway.router.HttpRouter;
+import com.sun.tracing.dtrace.Attributes;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -21,6 +23,9 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
 
     @Autowired
     private ContextCache contextCache;
+
+    @Autowired
+    private Caller caller;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -46,6 +51,9 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
 
     public void doReaderHttpRequest(FullHttpRequest req, FullHttpResponse response, Context context) {
         String uri = req.uri();
-        httpRouter.doRouter(req, response, context);
+        boolean ok = caller.doCall(req, response, context);
+        if (!ok) {
+            context.getChannelFront().writeAndFlush(response);
+        }
     }
 }

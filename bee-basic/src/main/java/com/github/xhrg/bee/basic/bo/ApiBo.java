@@ -1,9 +1,9 @@
-package com.github.xhrg.bee.basic.model;
+package com.github.xhrg.bee.basic.bo;
 
 import lombok.Data;
 
 @Data
-public class ApiModel {
+public class ApiBo {
 
     private int id;
 

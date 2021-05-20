@@ -17,6 +17,7 @@ public class ChannelCache {
 
     //缓存2个链接
     public void put2Channel(Channel front, Channel back) {
+        System.out.println(back.id().asLongText());
         keyIsFront.put(front.id().asLongText(), back);
         keyIsBack.put(back.id().asLongText(), front);
     }
@@ -26,6 +27,7 @@ public class ChannelCache {
     }
 
     public Channel getByBack(Channel back) {
+        System.out.println(back.id().asLongText());
         return keyIsBack.get(back.id().asLongText());
     }
 

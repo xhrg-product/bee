@@ -21,7 +21,7 @@ public class NettyHttpClient {
     @Autowired
     private HttpBackHandler httpBackHandler;
 
-    public void write(FullHttpRequest fullHttpRequest, Channel channelFront, String remoteAddress) {
+    public void write(FullHttpRequest fullHttpRequest, Channel channelFront, String host, int port) {
         Channel channelback = channelCache.getByFront(channelFront);
         if (channelback != null) {
             channelback.writeAndFlush(fullHttpRequest);
@@ -39,7 +39,7 @@ public class NettyHttpClient {
                     }
                 });
         try {
-            ChannelFuture channelFuture = cb.connect(remoteAddress, 80);
+            ChannelFuture channelFuture = cb.connect(host, port);
             channelFuture.addListener(future -> {
                 Channel channel = channelFuture.channel();
                 channelCache.put2Channel(channelFront, channel);

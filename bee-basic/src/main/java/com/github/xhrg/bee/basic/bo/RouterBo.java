@@ -1,15 +1,15 @@
-package com.github.xhrg.bee.basic.model;
+package com.github.xhrg.bee.basic.bo;
 
 import lombok.Data;
 
 @Data
-public class RouterModel {
+public class RouterBo {
 
     private Integer id;
     
     private String type;
     
-    private String targetAddress;
+    private String targetUrl;
     
     private Integer apiId;
 }
