@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ApiPo {
 
-    private int id;
+    private Integer id;
 
     private String name;
 

@@ -10,9 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 @Data
 public class HttpResponseExt {
 
-    private String body;
+    private String body = "";
 
-    private int httpCode;
+    private int httpCode = 200;
 
     public FullHttpResponse full() {
 

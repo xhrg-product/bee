@@ -1,6 +1,7 @@
 package com.github.xhrg.bee.gateway.netty.back;
 
 import com.github.xhrg.bee.gateway.cache.ChannelCache;
+import com.github.xhrg.bee.gateway.util.HttpUtilsExt;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -45,13 +46,7 @@ public class NettyHttpClient {
             channelFuture.addListener(future -> {
                 //如果创建链接失败
                 if (!future.isSuccess()) {
-                    String message = "connection http error";
-                    ByteBuf bf = Unpooled.copiedBuffer(message, CharsetUtil.UTF_8);
-                    FullHttpResponse response = new DefaultFullHttpResponse(
-                            HttpVersion.HTTP_1_0,
-                            HttpResponseStatus.BAD_GATEWAY, bf);
-                    HttpUtil.setContentLength(response, message.length());
-                    channelFront.writeAndFlush(response);
+                    channelFront.writeAndFlush(HttpUtilsExt.CONNECTION_ERROR_RESPONSE);
                     return;
                 }
                 Channel channelNewBack = channelFuture.channel();

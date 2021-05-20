@@ -8,19 +8,22 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+
 @Component
+@Slf4j
 public class NettyHttpServer implements ApplicationRunner {
 
-    @Autowired
+    @Resource
     private HttpFrontHandler httpFrontHandler;
 
-    @Value("${gateway.port:9000}")
+    @Value("${gateway.port:10000}")
     private int port;
 
     @Override
@@ -46,6 +49,6 @@ public class NettyHttpServer implements ApplicationRunner {
                     }
                 })
                 .bind(this.port);
-        System.out.println("netty http start");
+        log.info("netty server started, port is {}, please visit http://127.0.0.1:{}/ping", this.port, this.port);
     }
 }
