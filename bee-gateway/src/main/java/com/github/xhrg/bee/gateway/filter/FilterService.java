@@ -17,21 +17,29 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class FilterService implements BeanPostProcessor {
 
-    private Map<String, Filter> filterMapPre = new ConcurrentHashMap<>();
+    private Map<String, Filter> filtersPre = new ConcurrentHashMap<>();
 
-    private Map<String, Filter> filterMapPost = new ConcurrentHashMap<>();
+    private Map<String, Filter> filtersPost = new ConcurrentHashMap<>();
 
     private Map<Integer, String> sortMap = new TreeMap<>();
 
     public boolean pre(FullHttpRequest req, HttpResponseExt response, Context context) {
         FilterBo filterBo = context.getApiRunBo().getFilterBo();
-        Filter filter = filterMapPre.get(filterBo.getName());
+        Filter filter = filtersPre.get(filterBo.getName());
+        //如果配置的过滤器，在本地过滤器没有找到，则跳过往下继续执行。
+        if (filter == null) {
+            return true;
+        }
         return filter.doFilter(req, response, context);
     }
 
     public boolean post(FullHttpRequest req, HttpResponseExt response, Context context) {
         FilterBo filterBo = context.getApiRunBo().getFilterBo();
-        Filter filter = filterMapPost.get(filterBo.getName());
+        Filter filter = filtersPost.get(filterBo.getName());
+        //如果配置的过滤器，在本地过滤器没有找到，则跳过往下继续执行。
+        if (filter == null) {
+            return true;
+        }
         return filter.doFilter(req, response, context);
     }
 
@@ -40,9 +48,9 @@ public class FilterService implements BeanPostProcessor {
             Filter filter = (Filter) bean;
             sortMap.put(filter.sort(), filter.name());
             if (filter.type() == FilterType.PRE) {
-                filterMapPre.put(filter.name(), filter);
+                filtersPre.put(filter.name(), filter);
             } else {
-                filterMapPost.put(filter.name(), filter);
+                filtersPost.put(filter.name(), filter);
             }
         }
         return bean;
