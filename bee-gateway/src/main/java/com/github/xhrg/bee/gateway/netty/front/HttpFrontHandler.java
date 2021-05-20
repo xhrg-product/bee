@@ -6,6 +6,7 @@ import com.github.xhrg.bee.gateway.caller.Caller;
 import com.github.xhrg.bee.gateway.router.HttpRouter;
 import com.sun.tracing.dtrace.Attributes;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -39,7 +40,7 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
         FullHttpResponse response = new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1,
                 HttpResponseStatus.OK,
-                Unpooled.copiedBuffer("", CharsetUtil.UTF_8));
+                Unpooled.copiedBuffer("a", CharsetUtil.UTF_8));
         Context context = new Context();
         FullHttpRequest request = req.retain();
         context.setChannelFront(ctx.channel());

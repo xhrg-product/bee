@@ -30,6 +30,7 @@ public class HttpRouter implements Router {
             request.setUri(url.toURI().getPath());
             nettyHttpClient.write(request, channelFront, url.getHost(), url.getPort());
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
