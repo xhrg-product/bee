@@ -7,15 +7,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApiCache {
 
-    
-    
-    
     @PostConstruct
     public void init() {
-       
-        
-        
-        
+
     }
-    
+
 }

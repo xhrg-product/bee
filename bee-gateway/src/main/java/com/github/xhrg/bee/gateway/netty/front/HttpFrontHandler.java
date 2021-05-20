@@ -37,7 +37,6 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
                 Unpooled.copiedBuffer("", CharsetUtil.UTF_8));
         Context context = new Context();
         FullHttpRequest request = req.retain();
-
         context.setChannelFront(ctx.channel());
         context.setFullHttpRequest(request);
         contextCache.putContext(ctx.channel().id().asLongText(), context);

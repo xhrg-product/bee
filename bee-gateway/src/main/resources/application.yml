@@ -1,7 +1,7 @@
 spring:
   application:
-    name: "demo-service"
+    name: "bee-gateway"
   datasource:
-    url: "jdbc:mysql://localhost/demo_db"
+    url: "jdbc:mysql://localhost/bee"
     username: "root"
     password: "123456"
