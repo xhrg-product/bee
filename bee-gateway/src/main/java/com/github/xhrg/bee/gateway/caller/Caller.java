@@ -23,10 +23,10 @@ public class Caller {
     public boolean doCall(FullHttpRequest req, FullHttpResponse response, Context context) {
         String url = req.uri();
         ApiRunBo apiRunBo = dataLoadService.match(url);
-        context.setApiRunBo(apiRunBo);
         if (apiRunBo == null) {
             return false;
         }
+        context.setApiRunBo(apiRunBo);
         if (Objects.equals(apiRunBo.getRouterBo().getType(), "http")) {
             routerHandler.route(req, response, context);
             return true;

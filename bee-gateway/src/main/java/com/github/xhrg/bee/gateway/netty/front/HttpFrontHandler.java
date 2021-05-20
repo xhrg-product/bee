@@ -12,11 +12,13 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @ChannelHandler.Sharable
 @Component
+@Slf4j
 public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     @Autowired
@@ -37,10 +39,12 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req) throws Exception {
         //创建一个默认的FullHttpResponse
+        String message = "not_found_by_bee_gateway";
         FullHttpResponse response = new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1,
-                HttpResponseStatus.OK,
-                Unpooled.copiedBuffer("a", CharsetUtil.UTF_8));
+                HttpResponseStatus.NOT_FOUND,
+                Unpooled.copiedBuffer(message, CharsetUtil.UTF_8));
+        HttpUtil.setContentLength(response, message.length());
         Context context = new Context();
         FullHttpRequest request = req.retain();
         context.setChannelFront(ctx.channel());
@@ -52,6 +56,7 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
 
     public void doReaderHttpRequest(FullHttpRequest req, FullHttpResponse response, Context context) {
         String uri = req.uri();
+        log.info(uri);
         boolean ok = caller.doCall(req, response, context);
         if (!ok) {
             context.getChannelFront().writeAndFlush(response);
