@@ -4,6 +4,7 @@ import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.gateway.api.Context;
 import com.github.xhrg.bee.gateway.api.Filter;
 import com.github.xhrg.bee.gateway.api.FilterType;
+import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import org.springframework.beans.BeansException;
@@ -23,13 +24,13 @@ public class FilterService implements BeanPostProcessor {
 
     private Map<Integer, String> sortMap = new TreeMap<>();
 
-    public boolean pre(FullHttpRequest req, FullHttpResponse response, Context context) {
+    public boolean pre(FullHttpRequest req, HttpResponseExt response, Context context) {
         FilterBo filterBo = context.getApiRunBo().getFilterBo();
         Filter filter = filterMapPre.get(filterBo.getName());
         return filter.doFilter(req, response, context);
     }
 
-    public boolean post(FullHttpRequest req, FullHttpResponse response, Context context) {
+    public boolean post(FullHttpRequest req, HttpResponseExt response, Context context) {
         FilterBo filterBo = context.getApiRunBo().getFilterBo();
         Filter filter = filterMapPost.get(filterBo.getName());
         return filter.doFilter(req, response, context);

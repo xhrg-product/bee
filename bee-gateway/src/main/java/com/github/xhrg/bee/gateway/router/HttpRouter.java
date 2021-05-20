@@ -2,6 +2,7 @@ package com.github.xhrg.bee.gateway.router;
 
 import com.github.xhrg.bee.gateway.api.Context;
 import com.github.xhrg.bee.gateway.api.Router;
+import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.netty.back.NettyHttpClient;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.*;
@@ -22,7 +23,7 @@ public class HttpRouter implements Router {
     private NettyHttpClient nettyHttpClient;
 
     @Override
-    public void doRouter(FullHttpRequest request, FullHttpResponse response, Context context) {
+    public void doRouter(FullHttpRequest request, HttpResponseExt response, Context context) {
         Channel channelFront = context.getChannelFront();
         String urlString = context.getApiRunBo().getRouterBo().getTargetUrl();
         try {

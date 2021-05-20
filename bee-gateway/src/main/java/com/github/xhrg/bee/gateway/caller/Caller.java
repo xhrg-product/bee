@@ -3,6 +3,7 @@ package com.github.xhrg.bee.gateway.caller;
 import com.github.xhrg.bee.basic.bo.ApiRunBo;
 import com.github.xhrg.bee.gateway.api.Context;
 import com.github.xhrg.bee.gateway.filter.FilterService;
+import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.load.DataLoadService;
 import com.github.xhrg.bee.gateway.router.RouterHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -24,7 +25,7 @@ public class Caller {
     @Autowired
     private DataLoadService dataLoadService;
 
-    public boolean doCall(FullHttpRequest req, FullHttpResponse response, Context context) {
+    public boolean doCall(FullHttpRequest req, HttpResponseExt response, Context context) {
         String url = req.uri();
         ApiRunBo apiRunBo = dataLoadService.match(url);
         if (apiRunBo == null) {

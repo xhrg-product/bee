@@ -34,8 +34,8 @@ public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpRespons
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) throws Exception {
-        String id = channelCache.getByBack(ctx.channel()).id().asLongText();
-        Context context = contextCache.getContext(id);
+        Channel frontChannel = channelCache.getByBack(ctx.channel());
+        Context context = contextCache.getContext(frontChannel);
         context.setChannelBack(ctx.channel());
         doReaderHttpRequest(context.getFullHttpRequest(), response, context);
     }
