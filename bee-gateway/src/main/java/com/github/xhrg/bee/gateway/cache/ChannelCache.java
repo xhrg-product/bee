@@ -1,5 +1,6 @@
 package com.github.xhrg.bee.gateway.cache;
 
+import com.github.xhrg.bee.gateway.util.ChannelUtils;
 import io.netty.channel.Channel;
 import org.springframework.stereotype.Component;
 
@@ -16,19 +17,17 @@ public class ChannelCache {
     private static Map<String, Channel> keyIsBack = new ConcurrentHashMap<String, Channel>();
 
     //缓存2个链接
-    public void put2Channel(Channel front, Channel back) {
-        System.out.println(back.id().asLongText());
-        keyIsFront.put(front.id().asLongText(), back);
-        keyIsBack.put(back.id().asLongText(), front);
+    public void put2Channel(Channel channelFront, Channel channelBack) {
+        keyIsFront.put(ChannelUtils.id(channelFront), channelBack);
+        keyIsBack.put(ChannelUtils.id(channelBack), channelFront);
     }
 
-    public Channel getByFront(Channel front) {
-        return keyIsFront.get(front.id().asLongText());
+    public Channel getByFront(Channel channelFront) {
+        return keyIsFront.get(ChannelUtils.id(channelFront));
     }
 
-    public Channel getByBack(Channel back) {
-        System.out.println(back.id().asLongText());
-        return keyIsBack.get(back.id().asLongText());
+    public Channel getByBack(Channel channelBack) {
+        return keyIsBack.get(ChannelUtils.id(channelBack));
     }
 
 }

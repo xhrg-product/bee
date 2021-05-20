@@ -1,7 +1,6 @@
 package com.github.xhrg.bee.gateway.netty.back;
 
 import com.github.xhrg.bee.gateway.cache.ChannelCache;
-import com.github.xhrg.bee.gateway.netty.back.HttpBackHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -15,8 +14,6 @@ import io.netty.util.CharsetUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.nio.ByteBuffer;
-
 @Component
 public class NettyHttpClient {
 
@@ -27,9 +24,9 @@ public class NettyHttpClient {
     private HttpBackHandler httpBackHandler;
 
     public void write(FullHttpRequest fullHttpRequest, Channel channelFront, String host, int port) {
-        Channel channelback = channelCache.getByFront(channelFront);
-        if (channelback != null) {
-            channelback.writeAndFlush(fullHttpRequest);
+        Channel channelBack = channelCache.getByFront(channelFront);
+        if (channelBack != null) {
+            channelBack.writeAndFlush(fullHttpRequest);
             return;
         }
         Bootstrap cb = new Bootstrap().group(channelFront.eventLoop())
@@ -57,9 +54,9 @@ public class NettyHttpClient {
                     channelFront.writeAndFlush(response);
                     return;
                 }
-                Channel channel = channelFuture.channel();
-                channelCache.put2Channel(channelFront, channel);
-                channel.writeAndFlush(fullHttpRequest);
+                Channel channelNewBack = channelFuture.channel();
+                channelCache.put2Channel(channelFront, channelNewBack);
+                channelNewBack.writeAndFlush(fullHttpRequest);
             });
         } catch (Exception e) {
             e.printStackTrace();
