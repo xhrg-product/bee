@@ -19,9 +19,6 @@ import org.springframework.stereotype.Component;
 public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     @Autowired
-    private HttpRouter httpRouter;
-
-    @Autowired
     private ContextCache contextCache;
 
     @Autowired

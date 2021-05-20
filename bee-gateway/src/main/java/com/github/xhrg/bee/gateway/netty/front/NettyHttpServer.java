@@ -49,6 +49,6 @@ public class NettyHttpServer implements ApplicationRunner {
                     }
                 })
                 .bind(this.port);
-        log.info("netty server started, port is {}, please visit http://127.0.0.1:{}/ping", this.port, this.port);
+        log.info("netty server started, please visit http://127.0.0.1:{}/ping", this.port);
     }
 }
