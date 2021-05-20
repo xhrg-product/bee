@@ -9,6 +9,7 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,9 @@ public class NettyHttpServer implements ApplicationRunner {
 
     @Autowired
     private HttpFrontHandler httpFrontHandler;
+
+    @Value("${gateway.port:9000}")
+    private int port;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -41,9 +45,7 @@ public class NettyHttpServer implements ApplicationRunner {
                         pipe.addLast(httpFrontHandler);
                     }
                 })
-                .bind(8000);
+                .bind(this.port);
         System.out.println("netty http start");
     }
-
-
 }
