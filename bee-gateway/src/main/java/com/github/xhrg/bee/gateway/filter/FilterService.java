@@ -36,7 +36,6 @@ public class FilterService implements BeanPostProcessor {
     }
 
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        System.out.println(bean.getClass());
         if (bean instanceof Filter) {
             Filter filter = (Filter) bean;
             sortMap.put(filter.sort(), filter.name());
@@ -48,5 +47,4 @@ public class FilterService implements BeanPostProcessor {
         }
         return bean;
     }
-
 }
