@@ -12,4 +12,6 @@ public interface Filter {
     boolean doFilter(FullHttpRequest request,
                      FullHttpResponse response, Context context);
 
+    int sort();
+
 }

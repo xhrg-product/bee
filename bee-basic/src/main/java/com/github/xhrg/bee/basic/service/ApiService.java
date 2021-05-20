@@ -2,17 +2,20 @@ package com.github.xhrg.bee.basic.service;
 
 import com.github.xhrg.bee.basic.bo.ApiBo;
 import com.github.xhrg.bee.basic.bo.ApiRunBo;
+import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.basic.bo.RouterBo;
 import com.github.xhrg.bee.basic.mapper.ApiMapper;
+import com.github.xhrg.bee.basic.mapper.FilterMapper;
 import com.github.xhrg.bee.basic.mapper.RouterMapper;
 import com.github.xhrg.bee.basic.po.ApiPo;
+import com.github.xhrg.bee.basic.po.FilterPo;
 import com.github.xhrg.bee.basic.po.RouterPo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,19 +25,28 @@ import java.util.Map;
 @Slf4j
 public class ApiService {
 
-    @Autowired
+    @Resource
     private ApiMapper apiMapper;
 
-    @Autowired
+    @Resource
     private RouterMapper routerMockMapper;
+
+    @Resource
+    private FilterMapper filterMapper;
 
     public List<ApiRunBo> getAll() {
         List<ApiPo> apis = apiMapper.getAll();
         List<RouterPo> routers = routerMockMapper.getAll();
+        List<FilterPo> filters = filterMapper.getAll();
 
         Map<Integer, RouterPo> map = new HashMap<>();
         for (RouterPo po : routers) {
             map.put(po.getApiId(), po);
+        }
+
+        Map<Integer, FilterPo> mapFilter = new HashMap<>();
+        for (FilterPo po : filters) {
+            mapFilter.put(po.getApiId(), po);
         }
 
         List<ApiRunBo> list = new ArrayList<>();
@@ -52,9 +64,15 @@ public class ApiService {
             }
             BeanUtils.copyProperties(po, routerBo);
             bo.setRouterBo(routerBo);
+
+            FilterBo filterBo = new FilterBo();
+            FilterPo fib = mapFilter.get(a.getId());
+            if (fib != null) {
+                BeanUtils.copyProperties(fib, filterBo);
+                bo.setFilterBo(filterBo);
+            }
             list.add(bo);
         }
-
         return list;
     }
 }

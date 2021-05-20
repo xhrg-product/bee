@@ -9,4 +9,6 @@ public class ApiRunBo {
 
     private RouterBo routerBo;
 
+    private FilterBo filterBo;
+
 }

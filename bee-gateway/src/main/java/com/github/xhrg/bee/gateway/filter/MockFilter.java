@@ -24,4 +24,9 @@ public class MockFilter implements Filter {
     public boolean doFilter(FullHttpRequest request, FullHttpResponse response, Context context) {
         return false;
     }
+
+    @Override
+    public int sort() {
+        return 0;
+    }
 }
