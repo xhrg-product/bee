@@ -35,7 +35,7 @@ public class Caller {
 
         boolean ok = filterService.pre(req, response, context);
         if (!ok) {
-            return ok;
+            return false;
         }
 
         if (Objects.equals(apiRunBo.getRouterBo().getType(), "http")) {

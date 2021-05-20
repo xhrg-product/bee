@@ -6,7 +6,6 @@ import com.github.xhrg.bee.gateway.api.Filter;
 import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.FullHttpResponse;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,6 @@ public class FilterService implements BeanPostProcessor {
         return filter.doFilter(req, response, context);
     }
 
-
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         System.out.println(bean.getClass());
         if (bean instanceof Filter) {
@@ -50,6 +48,5 @@ public class FilterService implements BeanPostProcessor {
         }
         return bean;
     }
-
 
 }
