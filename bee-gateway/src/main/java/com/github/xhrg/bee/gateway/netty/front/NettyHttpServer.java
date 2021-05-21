@@ -2,12 +2,15 @@ package com.github.xhrg.bee.gateway.netty.front;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
+import io.netty.channel.epoll.EpollChannelOption;
+import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
+import io.netty.util.concurrent.GenericFutureListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -36,9 +39,11 @@ public class NettyHttpServer implements ApplicationRunner {
         //boss线程一般是1，如果你是多端口监听，才是大于1的值
         NioEventLoopGroup boss = new NioEventLoopGroup(1);
         NioEventLoopGroup worker = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
-        serverBootstrap
+        ChannelFuture channelFuture = serverBootstrap
                 .group(boss, worker)
                 .channel(NioServerSocketChannel.class)
+                //.option(EpollChannelOption.SO_REUSEPORT, true)
+                //.option(ChannelOption.SO_REUSEADDR, true)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     protected void initChannel(NioSocketChannel ch) {
                         ChannelPipeline pipe = ch.pipeline();
@@ -49,6 +54,11 @@ public class NettyHttpServer implements ApplicationRunner {
                     }
                 })
                 .bind(this.port);
+        channelFuture.addListener(future -> {
+            if (future.cause() != null) {
+                future.cause().printStackTrace();
+            }
+        });
         log.info("netty server started, please visit http://127.0.0.1:{}/ping", this.port);
     }
 }

@@ -24,7 +24,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <AsyncRoot level="INFO">
+        <AsyncRoot level="debug">
             <AppenderRef ref="RollingFile"/>
             <AppenderRef ref="Console"/>
         </AsyncRoot>

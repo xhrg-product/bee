@@ -32,11 +32,10 @@ public class DubboRouter implements Router {
         responseFuture.setCallback(new ResponseCallback() {
             @Override
             public void done(Object response) {
-                System.out.println("done");
             }
+
             @Override
             public void caught(Throwable exception) {
-                System.out.println("caught");
             }
         });
     }

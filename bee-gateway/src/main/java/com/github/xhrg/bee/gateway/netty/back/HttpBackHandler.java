@@ -42,7 +42,6 @@ public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpRespons
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.error("BackChannel Handler exceptionCaught");
         if (cause instanceof IOException) {
             ChannelUtils.closeChannel(ctx.channel());
             return;
@@ -52,7 +51,7 @@ public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpRespons
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        log.error("back链接关闭, channelInactive");
+        log.info("back链接关闭, channelInactive");
         ChannelUtils.closeChannel(ctx.channel());
         super.channelInactive(ctx);
     }

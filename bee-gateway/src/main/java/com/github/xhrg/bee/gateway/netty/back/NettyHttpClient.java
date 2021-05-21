@@ -30,7 +30,6 @@ public class NettyHttpClient {
         Attribute<Channel> attr = channelFront.attr(ChannelKey.OTHER_CHANNEL);
         Channel channelBack = attr.get();
         if (channelBack != null) {
-            System.out.println("链接复用"+a.getAndIncrement());
             channelBack.writeAndFlush(fullHttpRequest);
             return;
         }
@@ -46,7 +45,6 @@ public class NettyHttpClient {
                     }
                 });
         try {
-            System.out.println("创建后端链接"+b.getAndIncrement());
             ChannelFuture channelFuture = cb.connect(host, port);
             channelFuture.addListener(future -> {
                 //如果创建链接失败
