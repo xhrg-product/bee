@@ -8,6 +8,7 @@ import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.inner.InnerService;
 import com.github.xhrg.bee.gateway.load.DataLoadService;
+import com.github.xhrg.bee.gateway.netty.front.HttpFrontHandler;
 import com.github.xhrg.bee.gateway.router.RouterHandler;
 import io.netty.channel.Channel;
 import org.springframework.stereotype.Component;
@@ -30,12 +31,15 @@ public class Caller {
     @Resource
     private InnerService innerService;
 
+    @Resource
+    private HttpFrontHandler httpFrontHandler;
+
+    //执行后置过滤器，然后回写数据给前端
     public void doPost(HttpRequestExt req, HttpResponseExt response, RequestContext requestContext) {
 
         filterService.post(req, response, requestContext);
         //得到后台返回的响应，直接写会给前端
-        Channel channelFront = requestContext.getChannelFront();
-        channelFront.writeAndFlush(requestContext.getHttpResponseExt().full());
+        httpFrontHandler.writeToFront(requestContext.getChannelFront(), requestContext.getHttpResponseExt());
     }
 
     public Flow doPre(HttpRequestExt req, HttpResponseExt response, RequestContext requestContext) {

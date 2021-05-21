@@ -2,13 +2,19 @@ package com.github.xhrg.bee.gateway.netty.back;
 
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.caller.Caller;
+import com.github.xhrg.bee.gateway.http.HttpRequestExt;
+import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.util.ChannelKey;
 import com.github.xhrg.bee.gateway.util.ChannelUtils;
+import com.github.xhrg.bee.gateway.util.HttpUtilsExt;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpVersion;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +47,7 @@ public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpRespons
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         if (cause instanceof IOException) {
-            ChannelUtils.closeChannel(ctx.channel());
+            this.closeChannel(ctx.channel());
             return;
         }
         super.exceptionCaught(ctx, cause);
@@ -50,7 +56,20 @@ public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpRespons
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("back链接关闭, channelInactive");
-        ChannelUtils.closeChannel(ctx.channel());
+        this.closeChannel(ctx.channel());
         super.channelInactive(ctx);
+    }
+
+    public void writeToBack(Channel channelBack, HttpRequestExt httpRequestExt) {
+        channelBack.writeAndFlush(httpRequestExt.full());
+    }
+
+    public void closeChannel(Channel channelBack) {
+        Channel channelFront = channelBack.attr(ChannelKey.OTHER_CHANNEL).get();
+        if (channelFront != null) {
+            channelFront.writeAndFlush(HttpUtilsExt.emptyResponse());
+            channelFront.close();
+        }
+        channelBack.close();
     }
 }

@@ -7,6 +7,7 @@ import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.util.ChannelKey;
 import com.github.xhrg.bee.gateway.util.ChannelUtils;
+import com.github.xhrg.bee.gateway.util.HttpUtilsExt;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -34,7 +35,7 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        ChannelUtils.closeChannel(ctx.channel());
+        this.closeChannel(ctx.channel());
         super.channelInactive(ctx);
     }
 
@@ -65,13 +66,21 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.debug("FrontChannel Handler exceptionCaught");
         if (cause instanceof IOException) {
-            ChannelUtils.closeChannel(ctx.channel());
+            this.closeChannel(ctx.channel());
             return;
         }
         super.exceptionCaught(ctx, cause);
     }
 
-    public void writeToFront(Channel channel, HttpRequestExt httpRequestExt) {
-        channel.writeAndFlush(httpRequestExt.full());
+    public void writeToFront(Channel channelFront, HttpResponseExt httpRequestExt) {
+        channelFront.writeAndFlush(httpRequestExt.full());
+    }
+
+    public void closeChannel(Channel channelFront) {
+        Channel channelBack = channelFront.attr(ChannelKey.OTHER_CHANNEL).get();
+        if (channelBack != null) {
+            channelBack.close();
+        }
+        channelFront.close();
     }
 }

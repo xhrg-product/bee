@@ -13,8 +13,6 @@ import java.util.Map;
 @Data
 public class RequestContext {
 
-    private String channelId;
-
     private Map<String, Object> map = new HashMap<>();
 
     private Channel channelFront;

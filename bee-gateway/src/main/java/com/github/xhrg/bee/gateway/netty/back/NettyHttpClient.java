@@ -28,12 +28,10 @@ public class NettyHttpClient {
 
     public void write(HttpRequestExt httpRequestExt, Channel channelFront, String host, int port, RequestContext requestContext) {
 
-        FullHttpRequest fullHttpRequest = httpRequestExt.full();
-
         Attribute<Channel> attr = channelFront.attr(ChannelKey.OTHER_CHANNEL);
         Channel channelBack = attr.get();
         if (channelBack != null) {
-            channelBack.writeAndFlush(fullHttpRequest);
+            httpBackHandler.writeToBack(channelBack, httpRequestExt);
             return;
         }
         Bootstrap cb = new Bootstrap().group(channelFront.eventLoop())
@@ -52,7 +50,6 @@ public class NettyHttpClient {
             channelFuture.addListener(future -> {
                 //如果创建链接失败
                 if (!future.isSuccess()) {
-
                     httpFrontHandler.writeToFront(channelFront, HttpUtilsExt.error(requestContext.getHttpResponseExt()));
                     return;
                 }
@@ -62,7 +59,7 @@ public class NettyHttpClient {
                 channelFront.attr(ChannelKey.OTHER_CHANNEL).set(channelNewBack);
                 channelNewBack.attr(ChannelKey.OTHER_CHANNEL).set(channelFront);
 
-                channelNewBack.writeAndFlush(fullHttpRequest);
+                httpBackHandler.writeToBack(channelNewBack, httpRequestExt);
             });
         } catch (Exception e) {
             e.printStackTrace();
