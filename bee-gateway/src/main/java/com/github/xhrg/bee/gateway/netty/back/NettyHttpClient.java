@@ -1,5 +1,6 @@
 package com.github.xhrg.bee.gateway.netty.back;
 
+import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.util.ChannelKey;
 import com.github.xhrg.bee.gateway.util.HttpUtilsExt;
 import io.netty.bootstrap.Bootstrap;
@@ -20,7 +21,9 @@ public class NettyHttpClient {
     @Resource
     private HttpBackHandler httpBackHandler;
 
-    public void write(FullHttpRequest fullHttpRequest, Channel channelFront, String host, int port) {
+    public void write(HttpRequestExt httpRequestExt, Channel channelFront, String host, int port) {
+
+        FullHttpRequest fullHttpRequest = httpRequestExt.full();
 
         Attribute<Channel> attr = channelFront.attr(ChannelKey.OTHER_CHANNEL);
         Channel channelBack = attr.get();

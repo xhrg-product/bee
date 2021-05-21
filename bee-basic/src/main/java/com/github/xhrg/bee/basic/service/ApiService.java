@@ -31,7 +31,7 @@ public class ApiService {
     @Resource
     private FilterMapper filterMapper;
 
-    public List<ApiRunBo> getAll() {
+    public List<ApiRuntimeContext> getAll() {
         List<ApiPo> apis = apiMapper.getAll();
         List<RouterPo> routers = routerMockMapper.getAll();
         List<FilterPo> filters = filterMapper.getAll();
@@ -46,9 +46,9 @@ public class ApiService {
             mapFilter.put(po.getApiId(), po);
         }
 
-        List<ApiRunBo> list = new ArrayList<>();
+        List<ApiRuntimeContext> list = new ArrayList<>();
         for (ApiPo a : apis) {
-            ApiRunBo bo = new ApiRunBo();
+            ApiRuntimeContext bo = new ApiRuntimeContext();
 
             ApiBo b = new ApiBo();
             BeanUtils.copyProperties(a, b);

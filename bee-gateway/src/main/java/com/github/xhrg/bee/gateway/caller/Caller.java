@@ -1,14 +1,13 @@
 package com.github.xhrg.bee.gateway.caller;
 
-import com.github.xhrg.bee.basic.bo.ApiRunBo;
+import com.github.xhrg.bee.basic.bo.ApiRuntimeContext;
 import com.github.xhrg.bee.gateway.api.Context;
 import com.github.xhrg.bee.gateway.filter.FilterService;
+import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.inner.InnerService;
 import com.github.xhrg.bee.gateway.load.DataLoadService;
 import com.github.xhrg.bee.gateway.router.RouterHandler;
-import io.netty.handler.codec.http.FullHttpRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -29,11 +28,11 @@ public class Caller {
     @Resource
     private InnerService innerService;
 
-    public boolean doPost(FullHttpRequest req, HttpResponseExt response, Context context) {
+    public boolean doPost(HttpRequestExt req, HttpResponseExt response, Context context) {
         return filterService.post(req, response, context);
     }
 
-    public boolean doPre(FullHttpRequest req, HttpResponseExt response, Context context) {
+    public boolean doPre(HttpRequestExt req, HttpResponseExt response, Context context) {
         String url = req.uri();
 
         boolean ok = innerService.doInner(url, response);
@@ -41,11 +40,11 @@ public class Caller {
             return false;
         }
 
-        ApiRunBo apiRunBo = dataLoadService.match(url);
+        ApiRuntimeContext apiRunBo = dataLoadService.match(url);
         if (apiRunBo == null) {
             return false;
         }
-        context.setApiRunBo(apiRunBo);
+        context.setApiRuntimeContext(apiRunBo);
 
         ok = filterService.pre(req, response, context);
         if (!ok) {

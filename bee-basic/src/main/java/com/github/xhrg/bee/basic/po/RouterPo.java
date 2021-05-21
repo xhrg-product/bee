@@ -12,4 +12,6 @@ public class RouterPo {
     private String targetUrl;
 
     private Integer apiId;
+
+    private String data;
 }

@@ -2,6 +2,7 @@ package com.github.xhrg.bee.gateway.netty.front;
 
 import com.github.xhrg.bee.gateway.api.Context;
 import com.github.xhrg.bee.gateway.caller.Caller;
+import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.util.ChannelKey;
 import com.github.xhrg.bee.gateway.util.ChannelUtils;
@@ -40,17 +41,19 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req) throws Exception {
         Context context = new Context();
         FullHttpRequest request = req.retain();
+
         HttpResponseExt httpResponseExt = new HttpResponseExt();
+        HttpRequestExt httpRequestExt = new HttpRequestExt(request);
 
         context.setChannelFront(ctx.channel());
-        context.setFullHttpRequest(request);
+        context.setHttpRequestExt(httpRequestExt);
         context.setHttpResponseExt(httpResponseExt);
 
         ctx.channel().attr(ChannelKey.CHANNEL_CONTEXT_KEY).set(context);
-        this.doReaderHttpRequest(request, httpResponseExt, context);
+        this.doReaderHttpRequest(httpRequestExt, httpResponseExt, context);
     }
 
-    public void doReaderHttpRequest(FullHttpRequest req, HttpResponseExt httpResponseExt, Context context) {
+    public void doReaderHttpRequest(HttpRequestExt req, HttpResponseExt httpResponseExt, Context context) {
         boolean ok = caller.doPre(req, httpResponseExt, context);
         if (!ok) {
             context.getChannelFront().writeAndFlush(httpResponseExt.full());

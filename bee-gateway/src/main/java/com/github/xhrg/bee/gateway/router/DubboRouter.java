@@ -1,39 +1,34 @@
 package com.github.xhrg.bee.gateway.router;
 
+import com.github.xhrg.bee.basic.bo.DubboRouterBo;
 import com.github.xhrg.bee.gateway.api.Context;
 import com.github.xhrg.bee.gateway.api.Router;
+import com.github.xhrg.bee.gateway.caller.Caller;
+import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
-import io.netty.handler.codec.http.FullHttpRequest;
-import org.apache.dubbo.config.ReferenceConfig;
-import org.apache.dubbo.rpc.service.GenericService;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.annotation.Resource;
+import java.util.concurrent.CompletableFuture;
 
 public class DubboRouter implements Router {
 
-    @Override
-    public void doRouter(FullHttpRequest request, HttpResponseExt response, Context context) {
+    @Resource
+    private Caller caller;
 
-        ReferenceConfig<GenericService> reference = new ReferenceConfig<GenericService>();
-        reference.setInterface("com.xxx.XxxService");
-        reference.setVersion("1.0.0");
-        reference.setAsync(true);
-        GenericService genericService = reference.get();
-        Map<String, Object> person = new HashMap<String, Object>();
-        person.put("name", "xxx");
-        person.put("password", "yyy");
-        genericService.$invoke("findPerson", new String[]
-                {"com.xxx.Person"}, new Object[]{person});
-//        ResponseFuture responseFuture = (ResponseFuture) RpcContext.getContext().getFuture();
-//        responseFuture.setCallback(new ResponseCallback() {
-//            @Override
-//            public void done(Object response) {
-//            }
-//
-//            @Override
-//            public void caught(Throwable exception) {
-//            }
-//        });
+    @Override
+    public void doRouter(HttpRequestExt request, HttpResponseExt response, Context context) {
+
+        String data = request.getData();
+        DubboRouterBo dubboRouterBo = (DubboRouterBo) context.getApiRuntimeContext().getRouterBo();
+        CompletableFuture<Object> afuture = dubboRouterBo.getGenericService().$invokeAsync(dubboRouterBo.getMethod(),
+                dubboRouterBo.getParamType(), new Object[]{data});
+        afuture.whenComplete((value, throwable) -> {
+            if (throwable != null) {
+                caller.doPost(request, context.getHttpResponseExt(), context);
+                return;
+            }
+            System.out.println(value);
+            System.out.println(throwable);
+        });
     }
 }
