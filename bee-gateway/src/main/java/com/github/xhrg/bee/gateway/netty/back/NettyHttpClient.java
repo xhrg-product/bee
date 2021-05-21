@@ -21,10 +21,6 @@ public class NettyHttpClient {
     @Resource
     private HttpBackHandler httpBackHandler;
 
-    private AtomicInteger a = new AtomicInteger(0);
-
-    private AtomicInteger b = new AtomicInteger(0);
-
     public void write(FullHttpRequest fullHttpRequest, Channel channelFront, String host, int port) {
 
         Attribute<Channel> attr = channelFront.attr(ChannelKey.OTHER_CHANNEL);
