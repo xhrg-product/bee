@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @ChannelHandler.Sharable
 @Component
 @Slf4j
@@ -40,15 +42,18 @@ public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpRespons
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.debug("BackChannel Handler exceptionCaught");
+        log.error("BackChannel Handler exceptionCaught");
+        if (cause instanceof IOException) {
+            ChannelUtils.closeChannel(ctx.channel());
+            return;
+        }
         super.exceptionCaught(ctx, cause);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        log.debug("back链接关闭, channelInactive");
+        log.error("back链接关闭, channelInactive");
         ChannelUtils.closeChannel(ctx.channel());
         super.channelInactive(ctx);
     }
-
 }

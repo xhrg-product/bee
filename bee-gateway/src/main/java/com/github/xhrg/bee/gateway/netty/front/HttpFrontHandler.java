@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 
 @ChannelHandler.Sharable
 @Component
@@ -51,11 +52,19 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
     }
 
     public void doReaderHttpRequest(FullHttpRequest req, HttpResponseExt httpResponseExt, Context context) {
-        String uri = req.uri();
-        log.info(uri);
         boolean ok = caller.doCall(req, httpResponseExt, context);
         if (!ok) {
             context.getChannelFront().writeAndFlush(httpResponseExt.full());
         }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        log.debug("FrontChannel Handler exceptionCaught");
+        if (cause instanceof IOException) {
+            ChannelUtils.closeChannel(ctx.channel());
+            return;
+        }
+        super.exceptionCaught(ctx, cause);
     }
 }

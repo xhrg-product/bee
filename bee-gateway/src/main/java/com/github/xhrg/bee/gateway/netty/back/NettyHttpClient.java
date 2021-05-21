@@ -13,6 +13,7 @@ import io.netty.util.Attribute;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class NettyHttpClient {
@@ -20,11 +21,16 @@ public class NettyHttpClient {
     @Resource
     private HttpBackHandler httpBackHandler;
 
+    private AtomicInteger a = new AtomicInteger(0);
+
+    private AtomicInteger b = new AtomicInteger(0);
+
     public void write(FullHttpRequest fullHttpRequest, Channel channelFront, String host, int port) {
 
         Attribute<Channel> attr = channelFront.attr(ChannelKey.OTHER_CHANNEL);
         Channel channelBack = attr.get();
         if (channelBack != null) {
+            System.out.println("链接复用"+a.getAndIncrement());
             channelBack.writeAndFlush(fullHttpRequest);
             return;
         }
@@ -40,6 +46,7 @@ public class NettyHttpClient {
                     }
                 });
         try {
+            System.out.println("创建后端链接"+b.getAndIncrement());
             ChannelFuture channelFuture = cb.connect(host, port);
             channelFuture.addListener(future -> {
                 //如果创建链接失败
