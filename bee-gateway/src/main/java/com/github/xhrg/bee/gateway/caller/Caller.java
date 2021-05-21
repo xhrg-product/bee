@@ -1,6 +1,7 @@
 package com.github.xhrg.bee.gateway.caller;
 
 import com.github.xhrg.bee.basic.bo.ApiRuntimeContext;
+import com.github.xhrg.bee.gateway.api.Flow;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.filter.FilterService;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
@@ -28,33 +29,33 @@ public class Caller {
     @Resource
     private InnerService innerService;
 
-    public boolean doPost(HttpRequestExt req, HttpResponseExt response, RequestContext requestContext) {
+    public Flow doPost(HttpRequestExt req, HttpResponseExt response, RequestContext requestContext) {
         return filterService.post(req, response, requestContext);
     }
 
-    public boolean doPre(HttpRequestExt req, HttpResponseExt response, RequestContext requestContext) {
+    public Flow doPre(HttpRequestExt req, HttpResponseExt response, RequestContext requestContext) {
         String url = req.uri();
 
-        boolean ok = innerService.doInner(url, response);
-        if (!ok) {
-            return false;
+        Flow flow = innerService.doInner(url, response);
+        if (Flow.isEnd(flow)) {
+            return flow;
         }
 
         ApiRuntimeContext apiRunBo = dataLoadService.match(url);
         if (apiRunBo == null) {
-            return false;
+            return Flow.END;
         }
         requestContext.setApiRuntimeContext(apiRunBo);
 
-        ok = filterService.pre(req, response, requestContext);
-        if (!ok) {
-            return false;
+        flow = filterService.pre(req, response, requestContext);
+        if (Flow.isEnd(flow)) {
+            return flow;
         }
 
         if (Objects.equals(apiRunBo.getRouterBo().getType(), "http")) {
             routerHandler.route(req, response, requestContext);
-            return true;
+            return Flow.GO;
         }
-        return false;
+        return Flow.END;
     }
 }

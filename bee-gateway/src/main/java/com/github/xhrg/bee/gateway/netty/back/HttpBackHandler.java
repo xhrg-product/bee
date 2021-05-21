@@ -11,7 +11,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import sun.misc.Request;
 
 import javax.annotation.Resource;
 import java.io.IOException;
