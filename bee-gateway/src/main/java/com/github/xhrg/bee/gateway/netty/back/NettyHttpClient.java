@@ -13,7 +13,6 @@ import io.netty.util.Attribute;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class NettyHttpClient {

@@ -1,9 +1,6 @@
 package com.github.xhrg.bee.basic.service;
 
-import com.github.xhrg.bee.basic.bo.ApiBo;
-import com.github.xhrg.bee.basic.bo.ApiRunBo;
-import com.github.xhrg.bee.basic.bo.FilterBo;
-import com.github.xhrg.bee.basic.bo.RouterBo;
+import com.github.xhrg.bee.basic.bo.*;
 import com.github.xhrg.bee.basic.mapper.ApiMapper;
 import com.github.xhrg.bee.basic.mapper.FilterMapper;
 import com.github.xhrg.bee.basic.mapper.RouterMapper;
@@ -56,15 +53,17 @@ public class ApiService {
             ApiBo b = new ApiBo();
             BeanUtils.copyProperties(a, b);
             bo.setApiBo(b);
-            RouterBo routerBo = new RouterBo();
+
             RouterPo po = map.get(a.getId());
             if (po == null) {
                 log.error(a.getName() + ", not match router");
                 continue;
             }
-            BeanUtils.copyProperties(po, routerBo);
-            bo.setRouterBo(routerBo);
-
+            if (po.getType() == "http") {
+                RouterBo routerBo = new HttpRouterBo();
+                BeanUtils.copyProperties(po, routerBo);
+                bo.setRouterBo(routerBo);
+            }
             FilterBo filterBo = new FilterBo();
             FilterPo fib = mapFilter.get(a.getId());
             if (fib != null) {

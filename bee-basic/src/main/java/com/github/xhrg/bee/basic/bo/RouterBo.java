@@ -12,4 +12,5 @@ public class RouterBo {
     private String targetUrl;
     
     private Integer apiId;
+
 }
