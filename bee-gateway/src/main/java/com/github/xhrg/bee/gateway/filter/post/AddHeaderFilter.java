@@ -1,29 +1,28 @@
-package com.github.xhrg.bee.gateway.filter;
+package com.github.xhrg.bee.gateway.filter.post;
 
 import com.github.xhrg.bee.gateway.api.Context;
 import com.github.xhrg.bee.gateway.api.Filter;
 import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import io.netty.handler.codec.http.FullHttpRequest;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class MockFilter implements Filter {
-
+@Component
+public class AddHeaderFilter implements Filter {
     @Override
     public String name() {
-        return "mockFilter";
+        return "add_header";
     }
 
     @Override
     public FilterType type() {
-        return FilterType.PRE;
+        return FilterType.POST;
     }
 
     @Override
     public boolean doFilter(FullHttpRequest request, HttpResponseExt response, Context context) {
-        response.setBody("mock response");
-        return false;
+        response.addHeader("filter_add_header", "value");
+        return true;
     }
 
     @Override

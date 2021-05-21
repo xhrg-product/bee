@@ -41,18 +41,18 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req) throws Exception {
         Context context = new Context();
         FullHttpRequest request = req.retain();
+        HttpResponseExt httpResponseExt = new HttpResponseExt();
 
         context.setChannelFront(ctx.channel());
         context.setFullHttpRequest(request);
+        context.setHttpResponseExt(httpResponseExt);
 
         ctx.channel().attr(ChannelKey.CHANNEL_CONTEXT_KEY).set(context);
-
-        HttpResponseExt httpResponseExt = new HttpResponseExt();
         this.doReaderHttpRequest(request, httpResponseExt, context);
     }
 
     public void doReaderHttpRequest(FullHttpRequest req, HttpResponseExt httpResponseExt, Context context) {
-        boolean ok = caller.doCall(req, httpResponseExt, context);
+        boolean ok = caller.doPre(req, httpResponseExt, context);
         if (!ok) {
             context.getChannelFront().writeAndFlush(httpResponseExt.full());
         }

@@ -1,6 +1,7 @@
 package com.github.xhrg.bee.gateway.api;
 
 import com.github.xhrg.bee.basic.bo.ApiRunBo;
+import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.FullHttpRequest;
 import lombok.Data;
@@ -20,6 +21,8 @@ public class Context {
     private Channel channelBack;
 
     private FullHttpRequest fullHttpRequest;
+
+    private HttpResponseExt httpResponseExt;
 
     private ApiRunBo apiRunBo;
 }

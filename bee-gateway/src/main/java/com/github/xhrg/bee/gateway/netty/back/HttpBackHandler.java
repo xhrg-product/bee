@@ -1,6 +1,7 @@
 package com.github.xhrg.bee.gateway.netty.back;
 
 import com.github.xhrg.bee.gateway.api.Context;
+import com.github.xhrg.bee.gateway.caller.Caller;
 import com.github.xhrg.bee.gateway.router.HttpRouter;
 import com.github.xhrg.bee.gateway.util.ChannelKey;
 import com.github.xhrg.bee.gateway.util.ChannelUtils;
@@ -12,7 +13,9 @@ import io.netty.handler.codec.http.FullHttpResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sun.security.jgss.HttpCaller;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 
 @ChannelHandler.Sharable
@@ -22,6 +25,9 @@ public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpRespons
 
     @Autowired
     private HttpRouter httpRouter;
+
+    @Resource
+    private Caller caller;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -35,9 +41,11 @@ public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpRespons
         Context context = ChannelUtils.getContextByBackChannel(channelBack);
         context.setChannelBack(ctx.channel());
 
+        caller.doPost(context.getFullHttpRequest(), context.getHttpResponseExt(), context);
+
         //得到后台返回的响应，直接写会给前端
         Channel channelFront = channelBack.attr(ChannelKey.OTHER_CHANNEL).get();
-        channelFront.writeAndFlush(response.retain());
+        channelFront.writeAndFlush(context.getHttpResponseExt().full());
     }
 
     @Override

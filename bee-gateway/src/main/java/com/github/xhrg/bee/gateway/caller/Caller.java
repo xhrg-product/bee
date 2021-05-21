@@ -29,7 +29,11 @@ public class Caller {
     @Resource
     private InnerService innerService;
 
-    public boolean doCall(FullHttpRequest req, HttpResponseExt response, Context context) {
+    public boolean doPost(FullHttpRequest req, HttpResponseExt response, Context context) {
+        return filterService.post(req, response, context);
+    }
+
+    public boolean doPre(FullHttpRequest req, HttpResponseExt response, Context context) {
         String url = req.uri();
 
         boolean ok = innerService.doInner(url, response);
