@@ -2,7 +2,7 @@ spring:
   application:
     name: "bee-demo"
 server:
-  port: 9001
+  port: 20000
   servlet:
     context-path: "/bee-demo"
 

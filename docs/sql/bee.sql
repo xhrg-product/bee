@@ -38,7 +38,7 @@ LOCK TABLES `bee_api` WRITE;
 
 INSERT INTO `bee_api` (`id`, `name`, `path`, `note`)
 VALUES
-	(1,'测试接口','/aa','无');
+	(1,'测试接口','/demo','无');
 
 /*!40000 ALTER TABLE `bee_api` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -95,7 +95,7 @@ LOCK TABLES `bee_router` WRITE;
 
 INSERT INTO `bee_router` (`id`, `type`, `target_Url`, `api_id`)
 VALUES
-	(1,'http','http://127.0.0.1:9001/bee-demo/query',1);
+	(1,'http','http://127.0.0.1:20000/bee-demo/query',1);
 
 /*!40000 ALTER TABLE `bee_router` ENABLE KEYS */;
 UNLOCK TABLES;
