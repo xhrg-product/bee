@@ -1,31 +1,29 @@
 package com.github.xhrg.bee.gateway.netty.back;
 
-import com.github.xhrg.bee.gateway.cache.ChannelCache;
+import com.github.xhrg.bee.gateway.util.ChannelKey;
 import com.github.xhrg.bee.gateway.util.HttpUtilsExt;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.*;
-import io.netty.util.CharsetUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.netty.util.Attribute;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component
 public class NettyHttpClient {
 
-    @Autowired
-    private ChannelCache channelCache;
-
-    @Autowired
+    @Resource
     private HttpBackHandler httpBackHandler;
 
     public void write(FullHttpRequest fullHttpRequest, Channel channelFront, String host, int port) {
-        Channel channelBack = channelCache.getByFront(channelFront);
+
+        Attribute<Channel> attr = channelFront.attr(ChannelKey.CHANNEL_BACK_KEY);
+        Channel channelBack = attr.get();
         if (channelBack != null) {
             channelBack.writeAndFlush(fullHttpRequest);
             return;
@@ -50,7 +48,11 @@ public class NettyHttpClient {
                     return;
                 }
                 Channel channelNewBack = channelFuture.channel();
-                channelCache.put2Channel(channelFront, channelNewBack);
+
+                //对向前和向后的channel进行一个双向绑定。
+                channelFront.attr(ChannelKey.CHANNEL_BACK_KEY).set(channelNewBack);
+                channelNewBack.attr(ChannelKey.CHANNEL_FRONT_KEY).set(channelFront);
+
                 channelNewBack.writeAndFlush(fullHttpRequest);
             });
         } catch (Exception e) {

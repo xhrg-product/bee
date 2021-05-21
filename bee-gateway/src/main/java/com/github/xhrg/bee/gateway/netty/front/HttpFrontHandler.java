@@ -1,27 +1,25 @@
 package com.github.xhrg.bee.gateway.netty.front;
 
 import com.github.xhrg.bee.gateway.api.Context;
-import com.github.xhrg.bee.gateway.cache.ContextCache;
 import com.github.xhrg.bee.gateway.caller.Caller;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
-import com.github.xhrg.bee.gateway.router.HttpRouter;
+import com.github.xhrg.bee.gateway.util.ChannelKey;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @ChannelHandler.Sharable
 @Component
 @Slf4j
 public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
-    @Autowired
-    private ContextCache contextCache;
 
-    @Autowired
+    @Resource
     private Caller caller;
 
     @Override
@@ -38,7 +36,7 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
         context.setChannelFront(ctx.channel());
         context.setFullHttpRequest(request);
 
-        contextCache.putContext(ctx.channel(), context);
+        ctx.channel().attr(ChannelKey.CHANNEL_CONTEXT_KEY).set(context);
 
         HttpResponseExt httpResponseExt = new HttpResponseExt();
         this.doReaderHttpRequest(request, httpResponseExt, context);

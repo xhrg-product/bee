@@ -18,4 +18,5 @@ public abstract class HttpUtilsExt {
         HttpUtil.setContentLength(response, message.length());
         return response;
     }
+
 }
