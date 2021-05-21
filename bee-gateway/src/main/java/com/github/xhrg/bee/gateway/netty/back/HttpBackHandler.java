@@ -22,7 +22,6 @@ public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpRespons
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        String id = ctx.channel().id().asLongText();
     }
 
     @Override
@@ -33,7 +32,19 @@ public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpRespons
         context.setChannelBack(ctx.channel());
 
         //得到后台返回的响应，直接写会给前端
-        Channel channelFront = channelBack.attr(ChannelKey.CHANNEL_FRONT_KEY).get();
+        Channel channelFront = channelBack.attr(ChannelKey.OTHER_CHANNEL).get();
         channelFront.writeAndFlush(response.retain());
     }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        super.exceptionCaught(ctx, cause);
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        ChannelUtils.closeChannel(ctx.channel());
+        super.channelInactive(ctx);
+    }
+
 }

@@ -22,7 +22,7 @@ public class NettyHttpClient {
 
     public void write(FullHttpRequest fullHttpRequest, Channel channelFront, String host, int port) {
 
-        Attribute<Channel> attr = channelFront.attr(ChannelKey.CHANNEL_BACK_KEY);
+        Attribute<Channel> attr = channelFront.attr(ChannelKey.OTHER_CHANNEL);
         Channel channelBack = attr.get();
         if (channelBack != null) {
             channelBack.writeAndFlush(fullHttpRequest);
@@ -44,14 +44,14 @@ public class NettyHttpClient {
             channelFuture.addListener(future -> {
                 //如果创建链接失败
                 if (!future.isSuccess()) {
-                    channelFront.writeAndFlush(HttpUtilsExt.CONNECTION_ERROR_RESPONSE);
+                    channelFront.writeAndFlush(HttpUtilsExt.connectionErrorResponse());
                     return;
                 }
                 Channel channelNewBack = channelFuture.channel();
 
                 //对向前和向后的channel进行一个双向绑定。
-                channelFront.attr(ChannelKey.CHANNEL_BACK_KEY).set(channelNewBack);
-                channelNewBack.attr(ChannelKey.CHANNEL_FRONT_KEY).set(channelFront);
+                channelFront.attr(ChannelKey.OTHER_CHANNEL).set(channelNewBack);
+                channelNewBack.attr(ChannelKey.OTHER_CHANNEL).set(channelFront);
 
                 channelNewBack.writeAndFlush(fullHttpRequest);
             });

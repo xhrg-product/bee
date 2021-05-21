@@ -4,6 +4,8 @@ import com.github.xhrg.bee.gateway.api.Context;
 import com.github.xhrg.bee.gateway.caller.Caller;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.util.ChannelKey;
+import com.github.xhrg.bee.gateway.util.ChannelUtils;
+import com.github.xhrg.bee.gateway.util.HttpUtilsExt;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -16,6 +18,7 @@ import javax.annotation.Resource;
 @ChannelHandler.Sharable
 @Component
 @Slf4j
+//ChannelRegisted --> ChannelActive --> ChannelInactive --> ChannelUnregistered
 public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
 
@@ -25,7 +28,12 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        String id = ctx.channel().id().asLongText();
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        ChannelUtils.closeChannel(ctx.channel());
+        super.channelInactive(ctx);
     }
 
     @Override
