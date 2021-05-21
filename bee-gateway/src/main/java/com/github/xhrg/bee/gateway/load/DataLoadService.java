@@ -2,18 +2,18 @@ package com.github.xhrg.bee.gateway.load;
 
 import com.github.xhrg.bee.basic.bo.ApiRunBo;
 import com.github.xhrg.bee.basic.service.ApiService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 
 @Service
 public class DataLoadService implements ApplicationListener<ContextRefreshedEvent> {
 
-    @Autowired
+    @Resource
     private ApiService apiService;
 
     private static List<ApiRunBo> list;

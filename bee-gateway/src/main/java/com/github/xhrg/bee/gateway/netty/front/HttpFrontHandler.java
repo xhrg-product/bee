@@ -5,7 +5,6 @@ import com.github.xhrg.bee.gateway.caller.Caller;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.util.ChannelKey;
 import com.github.xhrg.bee.gateway.util.ChannelUtils;
-import com.github.xhrg.bee.gateway.util.HttpUtilsExt;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

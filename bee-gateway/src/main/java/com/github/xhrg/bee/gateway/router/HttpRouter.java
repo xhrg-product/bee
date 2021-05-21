@@ -7,12 +7,10 @@ import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.netty.back.NettyHttpClient;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.net.URL;
-import java.net.URLDecoder;
 
 @Component
 public class HttpRouter implements Router {

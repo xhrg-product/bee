@@ -8,6 +8,4 @@ public class HttpRequestExt {
 
     private FullHttpRequest fullHttpRequest;
 
-
-
 }
