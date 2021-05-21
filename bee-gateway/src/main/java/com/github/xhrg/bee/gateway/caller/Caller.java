@@ -11,21 +11,22 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 
 @Component
 public class Caller {
 
-    @Autowired
+    @Resource
     private RouterHandler routerHandler;
 
-    @Autowired
+    @Resource
     private FilterService filterService;
 
-    @Autowired
+    @Resource
     private DataLoadService dataLoadService;
 
-    @Autowired
+    @Resource
     private InnerService innerService;
 
     public boolean doCall(FullHttpRequest req, HttpResponseExt response, Context context) {
