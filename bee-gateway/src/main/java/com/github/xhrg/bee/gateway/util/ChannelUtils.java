@@ -1,12 +1,12 @@
 package com.github.xhrg.bee.gateway.util;
 
-import com.github.xhrg.bee.gateway.api.Context;
+import com.github.xhrg.bee.gateway.api.RequestContext;
 import io.netty.channel.Channel;
 
 public abstract class ChannelUtils {
 
-    public static Context getContextByBackChannel(Channel channelBack) {
-        return channelBack.attr(ChannelKey.OTHER_CHANNEL).get().attr(ChannelKey.CHANNEL_CONTEXT_KEY).get();
+    public static RequestContext getContextByBackChannel(Channel channelBack) {
+        return channelBack.attr(ChannelKey.OTHER_CHANNEL).get().attr(ChannelKey.CHANNEL_REQUEST_CONTEXT).get();
     }
 
     public static void closeChannel(Channel channel) {

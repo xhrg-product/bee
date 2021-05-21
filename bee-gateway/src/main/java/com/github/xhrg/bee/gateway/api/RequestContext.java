@@ -4,14 +4,14 @@ import com.github.xhrg.bee.basic.bo.ApiRuntimeContext;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import io.netty.channel.Channel;
-import io.netty.handler.codec.http.FullHttpRequest;
 import lombok.Data;
 
 import java.util.HashMap;
 import java.util.Map;
 
+//每一个http请求过来，都会创建一个新的RequestContext，这个RequestContext的生命周期，随着请求进入而生，请求返回而消失。
 @Data
-public class Context {
+public class RequestContext {
 
     private String channelId;
 

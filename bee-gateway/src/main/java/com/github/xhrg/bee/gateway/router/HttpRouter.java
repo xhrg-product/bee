@@ -1,6 +1,6 @@
 package com.github.xhrg.bee.gateway.router;
 
-import com.github.xhrg.bee.gateway.api.Context;
+import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.api.Router;
 import com.github.xhrg.bee.gateway.exp.BadException;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
@@ -19,10 +19,10 @@ public class HttpRouter implements Router {
     private NettyHttpClient nettyHttpClient;
 
     @Override
-    public void doRouter(HttpRequestExt request, HttpResponseExt response, Context context) {
-        Channel channelFront = context.getChannelFront();
+    public void doRouter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
+        Channel channelFront = requestContext.getChannelFront();
         try {
-            String urlString = context.getApiRuntimeContext().getRouterBo().getTargetUrl();
+            String urlString = requestContext.getApiRuntimeContext().getRouterBo().getTargetUrl();
             URL url = new URL(urlString);
             request.setUri(url.toURI().getPath());
             nettyHttpClient.write(request, channelFront, url.getHost(), url.getPort());
