@@ -7,6 +7,7 @@ import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.util.ChannelKey;
 import com.github.xhrg.bee.gateway.util.ChannelUtils;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -22,7 +23,6 @@ import java.io.IOException;
 @Slf4j
 //ChannelRegisted --> ChannelActive --> ChannelInactive --> ChannelUnregistered
 public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
-
 
     @Resource
     private Caller caller;
@@ -69,5 +69,9 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
             return;
         }
         super.exceptionCaught(ctx, cause);
+    }
+
+    public void writeToFront(Channel channel, HttpRequestExt httpRequestExt) {
+        channel.writeAndFlush(httpRequestExt.full());
     }
 }

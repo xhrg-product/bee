@@ -1,5 +1,6 @@
 package com.github.xhrg.bee.gateway.router;
 
+import com.alibaba.fastjson.JSON;
 import com.github.xhrg.bee.basic.bo.DubboRouterBo;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.api.Router;
@@ -24,11 +25,13 @@ public class DubboRouter implements Router {
                 dubboRouterBo.getParamType(), new Object[]{data});
         afuture.whenComplete((value, throwable) -> {
             if (throwable != null) {
-                caller.doPost(request, requestContext.getHttpResponseExt(), requestContext);
+                response.setHttpCode(502);
+                response.setBody("dubbo error, " + throwable.getMessage());
+                caller.doPost(request, response, requestContext);
                 return;
             }
-            System.out.println(value);
-            System.out.println(throwable);
+            response.setBody(JSON.toJSONString(value));
+            caller.doPost(request, response, requestContext);
         });
     }
 }

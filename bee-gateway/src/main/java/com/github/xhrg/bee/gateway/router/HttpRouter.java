@@ -25,7 +25,7 @@ public class HttpRouter implements Router {
             String urlString = requestContext.getApiRuntimeContext().getRouterBo().getTargetUrl();
             URL url = new URL(urlString);
             request.setUri(url.toURI().getPath());
-            nettyHttpClient.write(request, channelFront, url.getHost(), url.getPort());
+            nettyHttpClient.write(request, channelFront, url.getHost(), url.getPort(), requestContext);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BadException(e.getMessage());

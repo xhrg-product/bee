@@ -1,6 +1,8 @@
 package com.github.xhrg.bee.gateway.netty.back;
 
+import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
+import com.github.xhrg.bee.gateway.netty.front.HttpFrontHandler;
 import com.github.xhrg.bee.gateway.util.ChannelKey;
 import com.github.xhrg.bee.gateway.util.HttpUtilsExt;
 import io.netty.bootstrap.Bootstrap;
@@ -21,7 +23,10 @@ public class NettyHttpClient {
     @Resource
     private HttpBackHandler httpBackHandler;
 
-    public void write(HttpRequestExt httpRequestExt, Channel channelFront, String host, int port) {
+    @Resource
+    private HttpFrontHandler httpFrontHandler;
+
+    public void write(HttpRequestExt httpRequestExt, Channel channelFront, String host, int port, RequestContext requestContext) {
 
         FullHttpRequest fullHttpRequest = httpRequestExt.full();
 
@@ -47,7 +52,8 @@ public class NettyHttpClient {
             channelFuture.addListener(future -> {
                 //如果创建链接失败
                 if (!future.isSuccess()) {
-                    channelFront.writeAndFlush(HttpUtilsExt.connectionErrorResponse());
+
+                    httpFrontHandler.writeToFront(channelFront, HttpUtilsExt.error(requestContext.getHttpResponseExt()));
                     return;
                 }
                 Channel channelNewBack = channelFuture.channel();

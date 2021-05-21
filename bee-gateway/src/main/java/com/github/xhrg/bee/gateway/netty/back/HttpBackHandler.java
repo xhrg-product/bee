@@ -36,10 +36,6 @@ public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpRespons
         requestContext.setChannelBack(ctx.channel());
 
         caller.doPost(requestContext.getHttpRequestExt(), requestContext.getHttpResponseExt(), requestContext);
-
-        //得到后台返回的响应，直接写会给前端
-        Channel channelFront = channelBack.attr(ChannelKey.OTHER_CHANNEL).get();
-        channelFront.writeAndFlush(requestContext.getHttpResponseExt().full());
     }
 
     @Override
