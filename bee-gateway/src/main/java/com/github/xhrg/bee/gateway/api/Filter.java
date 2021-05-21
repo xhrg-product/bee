@@ -9,9 +9,8 @@ public interface Filter {
 
     FilterType type();
 
-    boolean doFilter(HttpRequestExt request,
+    Flow doFilter(HttpRequestExt request,
                      HttpResponseExt response, RequestContext requestContext);
 
     int sort();
-
 }

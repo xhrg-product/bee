@@ -1,5 +1,6 @@
 package com.github.xhrg.bee.gateway.netty.front;
 
+import com.github.xhrg.bee.gateway.api.Flow;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.caller.Caller;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
@@ -54,8 +55,8 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
     }
 
     public void doReaderHttpRequest(HttpRequestExt req, HttpResponseExt httpResponseExt, RequestContext requestContext) {
-        boolean ok = caller.doPre(req, httpResponseExt, requestContext);
-        if (!ok) {
+        Flow flow = caller.doPre(req, httpResponseExt, requestContext);
+        if (Flow.isEnd(flow)) {
             requestContext.getChannelFront().writeAndFlush(httpResponseExt.full());
         }
     }
