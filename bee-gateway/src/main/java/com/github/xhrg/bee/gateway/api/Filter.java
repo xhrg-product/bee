@@ -10,7 +10,7 @@ public interface Filter {
     FilterType type();
 
     boolean doFilter(HttpRequestExt request,
-                     HttpResponseExt response, Context context);
+                     HttpResponseExt response, RequestContext requestContext);
 
     int sort();
 

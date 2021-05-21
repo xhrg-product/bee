@@ -1,6 +1,6 @@
 package com.github.xhrg.bee.gateway.netty.front;
 
-import com.github.xhrg.bee.gateway.api.Context;
+import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.caller.Caller;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
@@ -39,24 +39,24 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req) throws Exception {
-        Context context = new Context();
+        RequestContext requestContext = new RequestContext();
         FullHttpRequest request = req.retain();
 
         HttpResponseExt httpResponseExt = new HttpResponseExt();
         HttpRequestExt httpRequestExt = new HttpRequestExt(request);
 
-        context.setChannelFront(ctx.channel());
-        context.setHttpRequestExt(httpRequestExt);
-        context.setHttpResponseExt(httpResponseExt);
+        requestContext.setChannelFront(ctx.channel());
+        requestContext.setHttpRequestExt(httpRequestExt);
+        requestContext.setHttpResponseExt(httpResponseExt);
 
-        ctx.channel().attr(ChannelKey.CHANNEL_CONTEXT_KEY).set(context);
-        this.doReaderHttpRequest(httpRequestExt, httpResponseExt, context);
+        ctx.channel().attr(ChannelKey.CHANNEL_REQUEST_CONTEXT).set(requestContext);
+        this.doReaderHttpRequest(httpRequestExt, httpResponseExt, requestContext);
     }
 
-    public void doReaderHttpRequest(HttpRequestExt req, HttpResponseExt httpResponseExt, Context context) {
-        boolean ok = caller.doPre(req, httpResponseExt, context);
+    public void doReaderHttpRequest(HttpRequestExt req, HttpResponseExt httpResponseExt, RequestContext requestContext) {
+        boolean ok = caller.doPre(req, httpResponseExt, requestContext);
         if (!ok) {
-            context.getChannelFront().writeAndFlush(httpResponseExt.full());
+            requestContext.getChannelFront().writeAndFlush(httpResponseExt.full());
         }
     }
 
