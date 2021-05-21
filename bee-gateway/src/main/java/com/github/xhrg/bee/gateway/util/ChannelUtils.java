@@ -10,9 +10,13 @@ public abstract class ChannelUtils {
     }
 
     public static void closeChannel(Channel channel) {
+        //断开链接的时候，写一个response过去，防止另一端因为收不到响应一致pending状态
         Channel channelOther = channel.attr(ChannelKey.OTHER_CHANNEL).getAndSet(null);
         if (channelOther != null) {
+            channelOther.writeAndFlush(HttpUtilsExt.emptyResponse());
             channelOther.close();
         }
+        channel.writeAndFlush(HttpUtilsExt.emptyResponse());
+        channel.close();
     }
 }

@@ -9,11 +9,13 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @ChannelHandler.Sharable
 @Component
+@Slf4j
 public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpResponse> {
 
     @Autowired
@@ -38,11 +40,13 @@ public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpRespons
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        log.debug("BackChannel Handler exceptionCaught");
         super.exceptionCaught(ctx, cause);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.debug("back链接关闭, channelInactive");
         ChannelUtils.closeChannel(ctx.channel());
         super.channelInactive(ctx);
     }

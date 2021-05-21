@@ -11,7 +11,7 @@ public class Query {
 
     //http://127.0.0.1:9001/bee-demo/query
     @RequestMapping("/query")
-    public Object query() {
+    public Object query() throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put("name", "order");
         map.put("num", 100);
