@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: "bee-admin"
+  datasource:
+    url: "jdbc:mysql://localhost/bee"
+    username: "root"
+    password: "123456"
+server:
+  port: 11000
+  servlet:
+    context-path: "/bee-admin"
+
