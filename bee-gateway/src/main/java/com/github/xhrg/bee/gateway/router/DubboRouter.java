@@ -19,7 +19,7 @@ public class DubboRouter implements Router {
     @Override
     public void doRouter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
 
-        String data = request.getData();
+        String data = request.getBody();
         DubboRouterBo dubboRouterBo = (DubboRouterBo) requestContext.getApiRuntimeContext().getRouterBo();
         CompletableFuture<Object> afuture = dubboRouterBo.getGenericService().$invokeAsync(dubboRouterBo.getMethod(),
                 dubboRouterBo.getParamType(), new Object[]{data});

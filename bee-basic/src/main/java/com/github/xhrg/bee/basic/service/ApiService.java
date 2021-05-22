@@ -59,7 +59,7 @@ public class ApiService {
                 log.error(a.getName() + ", not match router");
                 continue;
             }
-            if (po.getType() == "http") {
+            if ("http".equals(po.getType())) {
                 RouterBo routerBo = new HttpRouterBo();
                 BeanUtils.copyProperties(po, routerBo);
                 bo.setRouterBo(routerBo);

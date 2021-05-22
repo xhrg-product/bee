@@ -3,7 +3,6 @@ package com.github.xhrg.bee.gateway.netty.back;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.caller.Caller;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
-import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.util.ChannelKey;
 import com.github.xhrg.bee.gateway.util.ChannelUtils;
 import com.github.xhrg.bee.gateway.util.HttpUtilsExt;
@@ -11,10 +10,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpVersion;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -37,10 +33,9 @@ public class HttpBackHandler extends SimpleChannelInboundHandler<FullHttpRespons
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) throws Exception {
         Channel channelBack = ctx.channel();
-
         RequestContext requestContext = ChannelUtils.getContextByBackChannel(channelBack);
         requestContext.setChannelBack(ctx.channel());
-
+        requestContext.getHttpResponseExt().setFullHttpResponse(response.copy());
         caller.doPost(requestContext.getHttpRequestExt(), requestContext.getHttpResponseExt(), requestContext);
     }
 

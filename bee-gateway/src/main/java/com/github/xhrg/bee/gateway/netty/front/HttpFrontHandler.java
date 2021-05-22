@@ -40,12 +40,11 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req) throws Exception {
-        RequestContext requestContext = new RequestContext();
-        FullHttpRequest request = req.retain();
+    protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
 
         HttpResponseExt httpResponseExt = new HttpResponseExt();
-        HttpRequestExt httpRequestExt = new HttpRequestExt(request);
+        HttpRequestExt httpRequestExt = new HttpRequestExt(request.copy());
+        RequestContext requestContext = new RequestContext();
 
         requestContext.setChannelFront(ctx.channel());
         requestContext.setHttpRequestExt(httpRequestExt);
@@ -65,6 +64,7 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.debug("FrontChannel Handler exceptionCaught");
+        cause.printStackTrace();
         if (cause instanceof IOException) {
             this.closeChannel(ctx.channel());
             return;
@@ -72,8 +72,8 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
         super.exceptionCaught(ctx, cause);
     }
 
-    public void writeToFront(Channel channelFront, HttpResponseExt httpRequestExt) {
-        channelFront.writeAndFlush(httpRequestExt.full());
+    public void writeToFront(Channel channelFront, HttpResponseExt httpResponseExt) {
+        channelFront.writeAndFlush(httpResponseExt.full());
     }
 
     public void closeChannel(Channel channelFront) {

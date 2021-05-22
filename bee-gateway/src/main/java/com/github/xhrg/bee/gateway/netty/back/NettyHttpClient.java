@@ -47,6 +47,10 @@ public class NettyHttpClient {
                 });
         try {
             ChannelFuture channelFuture = cb.connect(host, port);
+            //这里因为要异步发送，所以需要做一些copy，
+            //在netty的channelRead0中，当channelRead0结束后，会把请求对象回收掉，
+            //如果这里不做一次copy，那么httpRequestExt中的实际FullHttpRequest和channelRead0中的句柄是一个。
+            //当channelRead0结束后，我们就没办法使用这个对象了。
             channelFuture.addListener(future -> {
                 //如果创建链接失败
                 if (!future.isSuccess()) {

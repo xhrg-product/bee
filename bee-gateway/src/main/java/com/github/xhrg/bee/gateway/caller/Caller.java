@@ -39,7 +39,7 @@ public class Caller {
 
         filterService.post(req, response, requestContext);
         //得到后台返回的响应，直接写会给前端
-        httpFrontHandler.writeToFront(requestContext.getChannelFront(), requestContext.getHttpResponseExt());
+        httpFrontHandler.writeToFront(requestContext.getChannelFront(), response);
     }
 
     public Flow doPre(HttpRequestExt req, HttpResponseExt response, RequestContext requestContext) {
