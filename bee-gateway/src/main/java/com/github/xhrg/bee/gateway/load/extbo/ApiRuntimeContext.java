@@ -1,4 +1,4 @@
-package com.github.xhrg.bee.gateway.extbo;
+package com.github.xhrg.bee.gateway.load.extbo;
 
 import com.github.xhrg.bee.basic.bo.ApiBo;
 import com.github.xhrg.bee.basic.bo.FilterBo;

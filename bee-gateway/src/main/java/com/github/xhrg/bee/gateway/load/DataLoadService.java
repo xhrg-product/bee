@@ -1,6 +1,6 @@
 package com.github.xhrg.bee.gateway.load;
 
-import com.github.xhrg.bee.gateway.extbo.ApiRuntimeContext;
+import com.github.xhrg.bee.gateway.load.extbo.ApiRuntimeContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.github.xhrg.bee.gateway.extbo;
+package com.github.xhrg.bee.gateway.load.extbo;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
