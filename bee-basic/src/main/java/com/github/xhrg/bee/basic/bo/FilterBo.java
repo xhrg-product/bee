@@ -10,4 +10,6 @@ public class FilterBo {
     private Integer apiId;
 
     private String name;
+
+    private String data;
 }

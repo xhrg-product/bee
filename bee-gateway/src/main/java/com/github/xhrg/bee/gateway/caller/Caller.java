@@ -1,6 +1,6 @@
 package com.github.xhrg.bee.gateway.caller;
 
-import com.github.xhrg.bee.basic.bo.ApiRuntimeContext;
+import com.github.xhrg.bee.gateway.extbo.ApiRuntimeContext;
 import com.github.xhrg.bee.gateway.api.Flow;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.filter.FilterService;
@@ -10,7 +10,6 @@ import com.github.xhrg.bee.gateway.inner.InnerService;
 import com.github.xhrg.bee.gateway.load.DataLoadService;
 import com.github.xhrg.bee.gateway.netty.front.HttpFrontHandler;
 import com.github.xhrg.bee.gateway.router.RouterHandler;
-import io.netty.channel.Channel;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -61,7 +60,7 @@ public class Caller {
             return flow;
         }
 
-        if (Objects.equals(apiRunBo.getRouterBo().getType(), "http")) {
+        if (Objects.equals(apiRunBo.getRouterBo().getName(), "http")) {
             routerHandler.route(req, response, requestContext);
             return Flow.GO;
         }

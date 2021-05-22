@@ -1,7 +1,7 @@
 package com.github.xhrg.bee.gateway.router;
 
 import com.alibaba.fastjson.JSON;
-import com.github.xhrg.bee.basic.bo.DubboRouterBo;
+import com.github.xhrg.bee.gateway.extbo.DubboRouterBo;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.api.Router;
 import com.github.xhrg.bee.gateway.caller.Caller;

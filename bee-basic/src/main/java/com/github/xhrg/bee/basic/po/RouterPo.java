@@ -7,11 +7,9 @@ public class RouterPo {
 
     private Integer id;
 
-    private String type;
-
-    private String targetUrl;
-
     private Integer apiId;
+
+    private String name;
 
     private String data;
 }

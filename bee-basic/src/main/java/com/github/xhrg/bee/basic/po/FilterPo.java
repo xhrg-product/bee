@@ -10,4 +10,6 @@ public class FilterPo {
     private Integer apiId;
 
     private String name;
+
+    private String data;
 }

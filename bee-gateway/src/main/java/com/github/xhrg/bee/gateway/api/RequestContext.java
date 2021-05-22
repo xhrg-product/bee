@@ -1,6 +1,6 @@
 package com.github.xhrg.bee.gateway.api;
 
-import com.github.xhrg.bee.basic.bo.ApiRuntimeContext;
+import com.github.xhrg.bee.gateway.extbo.ApiRuntimeContext;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import io.netty.channel.Channel;

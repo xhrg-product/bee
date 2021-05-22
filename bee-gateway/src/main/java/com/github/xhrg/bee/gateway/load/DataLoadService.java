@@ -1,7 +1,6 @@
 package com.github.xhrg.bee.gateway.load;
 
-import com.github.xhrg.bee.basic.bo.ApiRuntimeContext;
-import com.github.xhrg.bee.basic.service.ApiService;
+import com.github.xhrg.bee.gateway.extbo.ApiRuntimeContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,7 @@ import java.util.Objects;
 public class DataLoadService implements ApplicationListener<ContextRefreshedEvent> {
 
     @Resource
-    private ApiService apiService;
+    private ApiExtService apiService;
 
     private static List<ApiRuntimeContext> list;
 
