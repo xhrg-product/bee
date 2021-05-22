@@ -1,7 +1,8 @@
-package com.github.xhrg.bee.basic.bo;
+package com.github.xhrg.bee.gateway.extbo;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.github.xhrg.bee.basic.bo.RouterBo;
 import lombok.Data;
 import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;

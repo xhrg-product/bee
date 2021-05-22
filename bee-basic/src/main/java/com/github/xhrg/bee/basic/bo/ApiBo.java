@@ -2,6 +2,8 @@ package com.github.xhrg.bee.basic.bo;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class ApiBo {
 
@@ -9,12 +11,17 @@ public class ApiBo {
 
     private String name;
 
-    private String mark;
-
-    // http,dubbo,grpc其他
-    private String type;
-
-    // 配置的path, 比如“/query/*”
+    //配置的path, 比如“/query/*”
     private String path;
+
+    private String note;
+
+    private Integer groupId;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    private String userName;
 
 }
