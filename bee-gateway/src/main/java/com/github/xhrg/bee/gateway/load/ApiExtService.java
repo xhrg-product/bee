@@ -5,25 +5,47 @@ import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.basic.bo.RouterBo;
 import com.github.xhrg.bee.basic.service.ApiBoService;
 import com.github.xhrg.bee.gateway.filter.FilterService;
-import com.github.xhrg.bee.gateway.load.extbo.ApiRuntimeContext;
-import com.github.xhrg.bee.gateway.load.extbo.HttpRouterBo;
+import com.github.xhrg.bee.gateway.router.RouterHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 @Slf4j
-public class ApiExtService {
+public class ApiExtService implements ApplicationListener<ContextRefreshedEvent> {
 
     @Resource
     private ApiBoService apiBoService;
 
     @Resource
     private FilterService filterService;
+
+    @Resource
+    private RouterHandler routerHandler;
+
+    private List<ApiRuntimeContext> list;
+
+    public ApiRuntimeContext match(String path) {
+        for (ApiRuntimeContext apiRunBo : list) {
+            if (Objects.equals(apiRunBo.getApiBo().getPath(), path)) {
+                return apiRunBo;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        List<ApiRuntimeContext> list = this.getAll();
+        this.list = list;
+    }
 
     public List<ApiRuntimeContext> getAll() {
         List<ApiBo> apis = apiBoService.getAllApis();
@@ -42,17 +64,18 @@ public class ApiExtService {
                     log.error(apiBo.getName() + ", not match router");
                     continue;
                 }
-                if ("http".equals(routerBo.getName())) {
-                    RouterBo router = HttpRouterBo.toMe(routerBo);
-                    apiRuntimeContext.setRouterBo(router);
-                }
+
+                RouterBo routerExtBo = routerHandler.findRouter(routerBo.getName()).init(routerBo);
+                apiRuntimeContext.setRouterBo(routerExtBo);
+
                 FilterBo filterBo = filterBoMap.get(apiBo.getId());
                 if (filterBo != null) {
                     boolean ok = filterService.isPre(filterBo.getName());
+                    FilterBo extFilterBo = filterService.extFilterBo(filterBo);
                     if (ok) {
-                        apiRuntimeContext.getPreFilter().add(filterBo);
+                        apiRuntimeContext.getPreFilter().add(extFilterBo);
                     } else {
-                        apiRuntimeContext.getPostFilter().add(filterBo);
+                        apiRuntimeContext.getPostFilter().add(extFilterBo);
                     }
                 }
                 apiRuntimeContextList.add(apiRuntimeContext);

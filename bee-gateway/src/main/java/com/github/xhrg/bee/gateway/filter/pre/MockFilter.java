@@ -1,5 +1,6 @@
 package com.github.xhrg.bee.gateway.filter.pre;
 
+import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.gateway.api.Filter;
 import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.api.Flow;
@@ -19,6 +20,11 @@ public class MockFilter implements Filter {
     @Override
     public FilterType type() {
         return FilterType.PRE;
+    }
+
+    @Override
+    public FilterBo init(FilterBo filterBo) {
+        return filterBo;
     }
 
     @Override
