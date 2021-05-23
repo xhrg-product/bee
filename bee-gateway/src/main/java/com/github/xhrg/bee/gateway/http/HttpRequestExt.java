@@ -16,6 +16,7 @@ public class HttpRequestExt {
     private String body;
 
     private boolean isReadData = false;
+
     private boolean isSetData = false;
 
     private String uri;

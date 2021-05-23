@@ -15,7 +15,9 @@ public class HttpRouterBo extends RouterBo {
 
     private int port;
 
-    private String TargetUrl;
+    private String targetUrl;
+
+    private String targetPath;
 
     public static HttpRouterBo toMe(RouterBo routerBo) {
         HttpRouterBo httpRouterBo = JSON.parseObject(routerBo.getData(), HttpRouterBo.class);
@@ -24,6 +26,7 @@ public class HttpRouterBo extends RouterBo {
             URL url = new URL(httpRouterBo.getTargetUrl());
             httpRouterBo.setHost(url.getHost());
             httpRouterBo.setPort(url.getPort());
+            httpRouterBo.setTargetPath(url.getPath());
         } catch (Exception e) {
             throw new DataException(e.getMessage());
         }

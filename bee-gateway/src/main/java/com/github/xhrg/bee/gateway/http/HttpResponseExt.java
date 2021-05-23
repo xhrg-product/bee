@@ -28,8 +28,12 @@ public class HttpResponseExt {
     public FullHttpResponse full() {
 
         if (fullHttpResponse != null && !isReadData && !isSetData) {
+            for (Map.Entry<String, Object> entry : headers.entrySet()) {
+                fullHttpResponse.headers().add(entry.getKey(), entry.getValue());
+            }
             return fullHttpResponse;
         }
+
         if (fullHttpResponse == null) {
             HttpResponseStatus httpResponseStatus = HttpResponseStatus.valueOf(this.httpCode);
             if (StringUtils.isEmpty(body)) {
@@ -38,15 +42,17 @@ public class HttpResponseExt {
             ByteBuf buf = Unpooled.copiedBuffer(body, CharsetUtil.UTF_8);
             FullHttpResponse fullHttpResponse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, httpResponseStatus, buf);
             HttpUtil.setContentLength(fullHttpResponse, this.body.length());
-
             for (Map.Entry<String, Object> entry : headers.entrySet()) {
                 fullHttpResponse.headers().add(entry.getKey(), entry.getValue());
             }
             return fullHttpResponse;
         }
+        for (Map.Entry<String, Object> entry : headers.entrySet()) {
+            fullHttpResponse.headers().add(entry.getKey(), entry.getValue());
+        }
+
         ByteBuf byteBuf = Unpooled.copiedBuffer(body, CharsetUtil.UTF_8);
         return fullHttpResponse.replace(byteBuf);
-
     }
 
     public void addHeader(String key, Object value) {

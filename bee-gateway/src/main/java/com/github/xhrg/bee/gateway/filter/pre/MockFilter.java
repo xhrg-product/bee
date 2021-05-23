@@ -23,7 +23,7 @@ public class MockFilter implements Filter {
 
     @Override
     public Flow doFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
-        response.setBody("mock response");
+        response.setBody(requestContext.getFilterBo().getData());
         return Flow.END;
     }
 
