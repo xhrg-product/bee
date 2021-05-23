@@ -1,11 +1,11 @@
-package com.github.xhrg.bee.basic.po;
+package com.github.xhrg.bee.basic.mapper.mo;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class ApiPo {
+public class ApiMo {
 
     private Integer id;
 
