@@ -2,6 +2,7 @@ package com.github.xhrg.bee.gateway.netty.front;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
+import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -39,11 +40,14 @@ public class NettyHttpServer implements ApplicationRunner {
         ChannelFuture channelFuture = serverBootstrap
                 .group(boss, worker)
                 .channel(NioServerSocketChannel.class)
-                //.option(EpollChannelOption.SO_REUSEPORT, true)
-                //.option(ChannelOption.SO_REUSEADDR, true)
+                //linux下的单进程多端口
+                .option(EpollChannelOption.SO_REUSEPORT, true)
+
+                .option(ChannelOption.SO_REUSEADDR, true)
                 .option(ChannelOption.SO_BACKLOG, 1024)
                 .option(ChannelOption.SO_REUSEADDR, true)
                 .option(ChannelOption.SO_KEEPALIVE, false)
+
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.SO_SNDBUF, 65535)
                 .childOption(ChannelOption.SO_RCVBUF, 65535)
