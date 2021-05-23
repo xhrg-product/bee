@@ -1,6 +1,6 @@
 ### bee-gateway
 
-
+<img src="https://github.com/xhrg-product/bee/blob/main/docs/pic/bee.png" alt="logo" height="150" width="150"/>
 
 基于netty的网关
 
