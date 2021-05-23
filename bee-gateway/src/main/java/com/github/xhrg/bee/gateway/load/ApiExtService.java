@@ -4,6 +4,7 @@ import com.github.xhrg.bee.basic.bo.ApiBo;
 import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.basic.bo.RouterBo;
 import com.github.xhrg.bee.basic.service.ApiBoService;
+import com.github.xhrg.bee.gateway.filter.FilterService;
 import com.github.xhrg.bee.gateway.load.extbo.ApiRuntimeContext;
 import com.github.xhrg.bee.gateway.load.extbo.HttpRouterBo;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,9 @@ public class ApiExtService {
 
     @Resource
     private ApiBoService apiBoService;
+
+    @Resource
+    private FilterService filterService;
 
     public List<ApiRuntimeContext> getAll() {
         List<ApiBo> apis = apiBoService.getAllApis();
@@ -39,11 +43,17 @@ public class ApiExtService {
                     continue;
                 }
                 if ("http".equals(routerBo.getName())) {
-                    apiRuntimeContext.setRouterBo(HttpRouterBo.toMe(routerBo));
+                    RouterBo router = HttpRouterBo.toMe(routerBo);
+                    apiRuntimeContext.setRouterBo(router);
                 }
                 FilterBo filterBo = filterBoMap.get(apiBo.getId());
                 if (filterBo != null) {
-                    apiRuntimeContext.setFilterBo(filterBo);
+                    boolean ok = filterService.isPre(filterBo.getName());
+                    if (ok) {
+                        apiRuntimeContext.getPreFilter().add(filterBo);
+                    } else {
+                        apiRuntimeContext.getPostFilter().add(filterBo);
+                    }
                 }
                 apiRuntimeContextList.add(apiRuntimeContext);
             } catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.github.xhrg.bee.gateway.api;
 
+import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.gateway.load.extbo.ApiRuntimeContext;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
@@ -23,5 +24,10 @@ public class RequestContext {
 
     private HttpResponseExt httpResponseExt;
 
+    //这个对象是根据数据库的接口配置有几个，进程则有几个对象。
+    //ApiRuntimeContext和RequestContext的绑定关系是根据path匹配来的
     private ApiRuntimeContext apiRuntimeContext;
+
+    //运行时候的过滤器对象
+    private FilterBo filterBo;
 }

@@ -46,7 +46,6 @@ public class HttpResponseExt {
         }
         ByteBuf byteBuf = Unpooled.copiedBuffer(body, CharsetUtil.UTF_8);
         return fullHttpResponse.replace(byteBuf);
-
     }
 
     public void addHeader(String key, Object value) {

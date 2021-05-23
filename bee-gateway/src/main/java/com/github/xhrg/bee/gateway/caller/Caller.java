@@ -59,7 +59,7 @@ public class Caller {
 
         flow = filterService.pre(req, response, requestContext);
         if (Flow.isEnd(flow)) {
-            return flow;
+            return Flow.END;
         }
 
         if (Objects.equals(apiRunBo.getRouterBo().getName(), "http")) {

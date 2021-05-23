@@ -23,6 +23,8 @@ public class HttpRouter implements Router {
         Channel channelFront = requestContext.getChannelFront();
         try {
             HttpRouterBo httpRouterBo = (HttpRouterBo) requestContext.getApiRuntimeContext().getRouterBo();
+            //重写URL
+            request.setUri(((HttpRouterBo) requestContext.getApiRuntimeContext().getRouterBo()).getTargetPath());
             nettyHttpClient.write(request, channelFront, httpRouterBo.getHost(), httpRouterBo.getPort(), requestContext);
         } catch (Exception e) {
             e.printStackTrace();
