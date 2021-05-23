@@ -51,6 +51,8 @@ public class Caller {
 
         ApiRuntimeContext apiRunBo = dataLoadService.match(url);
         if (apiRunBo == null) {
+            response.setHttpCode(404);
+            response.setBody("not fund api");
             return Flow.END;
         }
         requestContext.setApiRuntimeContext(apiRunBo);
