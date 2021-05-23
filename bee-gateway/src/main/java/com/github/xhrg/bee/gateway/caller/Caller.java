@@ -1,6 +1,6 @@
 package com.github.xhrg.bee.gateway.caller;
 
-import com.github.xhrg.bee.gateway.extbo.ApiRuntimeContext;
+import com.github.xhrg.bee.gateway.load.extbo.ApiRuntimeContext;
 import com.github.xhrg.bee.gateway.api.Flow;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.filter.FilterService;
@@ -51,6 +51,8 @@ public class Caller {
 
         ApiRuntimeContext apiRunBo = dataLoadService.match(url);
         if (apiRunBo == null) {
+            response.setHttpCode(404);
+            response.setBody("not fund api");
             return Flow.END;
         }
         requestContext.setApiRuntimeContext(apiRunBo);
