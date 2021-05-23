@@ -6,9 +6,9 @@ import com.github.xhrg.bee.basic.bo.RouterBo;
 import com.github.xhrg.bee.basic.mapper.ApiMapper;
 import com.github.xhrg.bee.basic.mapper.FilterMapper;
 import com.github.xhrg.bee.basic.mapper.RouterMapper;
-import com.github.xhrg.bee.basic.po.ApiPo;
-import com.github.xhrg.bee.basic.po.FilterPo;
-import com.github.xhrg.bee.basic.po.RouterPo;
+import com.github.xhrg.bee.basic.mapper.mo.ApiMo;
+import com.github.xhrg.bee.basic.mapper.mo.FilterMo;
+import com.github.xhrg.bee.basic.mapper.mo.RouterMo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -35,11 +35,11 @@ public class ApiBoService {
 
 
     public Map<Integer, FilterBo> getAllFilter() {
-        List<FilterPo> filterBos = filterMapper.getAll();
+        List<FilterMo> filterBos = filterMapper.getAll();
 
         Map<Integer, FilterBo> map = new HashMap<>();
 
-        for (FilterPo filterPo : filterBos) {
+        for (FilterMo filterPo : filterBos) {
             FilterBo filterBo = new FilterBo();
             BeanUtils.copyProperties(filterPo, filterBo);
             map.put(filterPo.getApiId(), filterBo);
@@ -49,10 +49,10 @@ public class ApiBoService {
     }
 
     public Map<Integer, RouterBo> getAllRouter() {
-        List<RouterPo> routerPos = routerMapper.getAll();
+        List<RouterMo> routerPos = routerMapper.getAll();
         Map<Integer, RouterBo> map = new HashMap<>();
 
-        for (RouterPo routerpo : routerPos) {
+        for (RouterMo routerpo : routerPos) {
             RouterBo routerBo = new RouterBo();
             BeanUtils.copyProperties(routerpo, routerBo);
             map.put(routerBo.getApiId(), routerBo);
@@ -61,9 +61,9 @@ public class ApiBoService {
     }
 
     public List<ApiBo> getAllApis() {
-        List<ApiPo> apis = apiMapper.getAll();
+        List<ApiMo> apis = apiMapper.getAll();
         List<ApiBo> apiBos = new ArrayList<>();
-        for (ApiPo apiPo : apis) {
+        for (ApiMo apiPo : apis) {
             ApiBo apiBo = new ApiBo();
             BeanUtils.copyProperties(apiPo, apiBo);
             apiBos.add(apiBo);

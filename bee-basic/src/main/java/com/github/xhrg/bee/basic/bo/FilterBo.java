@@ -12,4 +12,6 @@ public class FilterBo {
     private String name;
 
     private String data;
+
+    private Object dynaData;
 }

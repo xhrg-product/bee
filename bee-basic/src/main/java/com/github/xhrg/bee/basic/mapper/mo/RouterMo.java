@@ -1,9 +1,9 @@
-package com.github.xhrg.bee.basic.po;
+package com.github.xhrg.bee.basic.mapper.mo;
 
 import lombok.Data;
 
 @Data
-public class FilterPo {
+public class RouterMo {
 
     private Integer id;
 

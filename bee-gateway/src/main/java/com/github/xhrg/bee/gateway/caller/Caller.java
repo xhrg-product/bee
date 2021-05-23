@@ -1,13 +1,13 @@
 package com.github.xhrg.bee.gateway.caller;
 
-import com.github.xhrg.bee.gateway.load.extbo.ApiRuntimeContext;
+import com.github.xhrg.bee.gateway.load.ApiExtService;
+import com.github.xhrg.bee.gateway.load.ApiRuntimeContext;
 import com.github.xhrg.bee.gateway.api.Flow;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.filter.FilterService;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.inner.InnerService;
-import com.github.xhrg.bee.gateway.load.DataLoadService;
 import com.github.xhrg.bee.gateway.netty.front.HttpFrontHandler;
 import com.github.xhrg.bee.gateway.router.RouterHandler;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class Caller {
     private FilterService filterService;
 
     @Resource
-    private DataLoadService dataLoadService;
+    private ApiExtService apiExtService;
 
     @Resource
     private InnerService innerService;
@@ -49,7 +49,7 @@ public class Caller {
             return flow;
         }
 
-        ApiRuntimeContext apiRunBo = dataLoadService.match(url);
+        ApiRuntimeContext apiRunBo = apiExtService.match(url);
         if (apiRunBo == null) {
             response.setHttpCode(404);
             response.setBody("not fund api");

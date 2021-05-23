@@ -73,4 +73,15 @@ public class FilterService implements BeanPostProcessor {
         }
         return bean;
     }
+
+    public FilterBo extFilterBo(FilterBo filterBo) {
+        Filter filter = filtersPre.get(filterBo.getName());
+        if (filter == null) {
+            filter = filtersPost.get(filterBo.getName());
+        }
+        if (filter == null) {
+            return filterBo;
+        }
+        return filter.init(filterBo);
+    }
 }

@@ -3,6 +3,7 @@ package com.github.xhrg.bee.gateway.filter.post;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.gateway.api.Filter;
 import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.api.Flow;
@@ -11,10 +12,12 @@ import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
 public class AddHeaderFilter implements Filter {
+
     @Override
     public String name() {
         return "add_header";
@@ -26,11 +29,21 @@ public class AddHeaderFilter implements Filter {
     }
 
     @Override
-    public Flow doFilter(HttpRequestExt request, HttpResponseExt response, RequestContext context) {
-        String headers = context.getFilterBo().getData();
-        JSONObject jsonObject = JSON.parseObject(headers);
+    public FilterBo init(FilterBo filterBo) {
+        Map<String, Object> map = new HashMap<>();
+        JSONObject jsonObject = JSON.parseObject(filterBo.getData());
         for (Map.Entry<String, Object> e : jsonObject.entrySet()) {
-            response.addHeader(e.getKey(), e.getValue());
+            map.put(e.getKey(), e.getValue());
+        }
+        filterBo.setDynaData(map);
+        return filterBo;
+    }
+
+    @Override
+    public Flow doFilter(HttpRequestExt request, HttpResponseExt response, RequestContext context) {
+        Map<String, Object> map = (Map<String, Object>) context.getFilterBo().getDynaData();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            response.addHeader(entry.getKey(), entry.getValue());
         }
         return Flow.GO;
     }
