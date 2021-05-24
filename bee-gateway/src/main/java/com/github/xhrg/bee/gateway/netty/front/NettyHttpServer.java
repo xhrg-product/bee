@@ -19,6 +19,7 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.net.InetSocketAddress;
 
 @Component
 @Slf4j
@@ -73,13 +74,11 @@ public class NettyHttpServer implements ApplicationRunner, ApplicationListener<C
                     }
                 });
         ChannelFuture channelFuture = serverBootstrap.bind(this.port).sync();
-        channelFuture.addListener(future -> {
-            if (future.cause() != null) {
-                log.error("connection port " + this.port + "error, please check");
-                future.cause().printStackTrace();
-            }
-        });
-        log.info("netty server started, please visit http://127.0.0.1:{}/ping", this.port);
+        if (channelFuture.isSuccess()) {
+            log.info("netty server started, please visit http://127.0.0.1:{}/ping", this.port);
+        } else {
+            log.error("netty server started fail, port is " + this.port + ", please check", channelFuture.cause());
+        }
     }
 
     //优雅下线netty。
