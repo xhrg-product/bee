@@ -41,6 +41,7 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
+
         log.debug("channelRead0, 请求进来了, channelId is {}", ctx.channel().id().asLongText());
 
         HttpResponseExt httpResponseExt = new HttpResponseExt();

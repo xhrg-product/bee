@@ -7,3 +7,4 @@ spring:
     password: "123456"
 gateway:
   port: 10000
+
