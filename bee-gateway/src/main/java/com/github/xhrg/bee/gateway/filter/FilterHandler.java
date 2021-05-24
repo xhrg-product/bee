@@ -17,7 +17,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class FilterService implements BeanPostProcessor {
+public class FilterHandler implements BeanPostProcessor {
 
     private Map<String, Filter> filtersPre = new ConcurrentHashMap<>();
 

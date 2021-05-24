@@ -4,7 +4,7 @@ import com.github.xhrg.bee.basic.bo.ApiBo;
 import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.basic.bo.RouterBo;
 import com.github.xhrg.bee.basic.service.ApiBoService;
-import com.github.xhrg.bee.gateway.filter.FilterService;
+import com.github.xhrg.bee.gateway.filter.FilterHandler;
 import com.github.xhrg.bee.gateway.router.RouterHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
@@ -25,7 +25,7 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
     private ApiBoService apiBoService;
 
     @Resource
-    private FilterService filterService;
+    private FilterHandler filterHandler;
 
     @Resource
     private RouterHandler routerHandler;
@@ -70,8 +70,8 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
 
                 FilterBo filterBo = filterBoMap.get(apiBo.getId());
                 if (filterBo != null) {
-                    boolean ok = filterService.isPre(filterBo.getName());
-                    FilterBo extFilterBo = filterService.extFilterBo(filterBo);
+                    boolean ok = filterHandler.isPre(filterBo.getName());
+                    FilterBo extFilterBo = filterHandler.extFilterBo(filterBo);
                     if (ok) {
                         apiRuntimeContext.getPreFilter().add(extFilterBo);
                     } else {

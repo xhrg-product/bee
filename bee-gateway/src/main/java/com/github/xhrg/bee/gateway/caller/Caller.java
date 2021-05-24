@@ -4,7 +4,7 @@ import com.github.xhrg.bee.gateway.load.ApiExtService;
 import com.github.xhrg.bee.gateway.load.ApiRuntimeContext;
 import com.github.xhrg.bee.gateway.api.Flow;
 import com.github.xhrg.bee.gateway.api.RequestContext;
-import com.github.xhrg.bee.gateway.filter.FilterService;
+import com.github.xhrg.bee.gateway.filter.FilterHandler;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.inner.InnerService;
@@ -13,7 +13,6 @@ import com.github.xhrg.bee.gateway.router.RouterHandler;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Objects;
 
 @Component
 public class Caller {
@@ -22,7 +21,7 @@ public class Caller {
     private RouterHandler routerHandler;
 
     @Resource
-    private FilterService filterService;
+    private FilterHandler filterHandler;
 
     @Resource
     private ApiExtService apiExtService;
@@ -36,7 +35,7 @@ public class Caller {
     //执行后置过滤器，然后回写数据给前端
     public void doPost(HttpRequestExt req, HttpResponseExt response, RequestContext requestContext) {
 
-        filterService.post(req, response, requestContext);
+        filterHandler.post(req, response, requestContext);
         //得到后台返回的响应，直接写会给前端
         httpFrontHandler.writeToFront(requestContext.getChannelFront(), response);
     }
@@ -57,15 +56,11 @@ public class Caller {
         }
         requestContext.setApiRuntimeContext(apiRunBo);
 
-        flow = filterService.pre(req, response, requestContext);
+        flow = filterHandler.pre(req, response, requestContext);
         if (Flow.isEnd(flow)) {
             return Flow.END;
         }
-
-        if (Objects.equals(apiRunBo.getRouterBo().getName(), "http")) {
-            routerHandler.route(req, response, requestContext);
-            return Flow.GO;
-        }
-        return Flow.END;
+        routerHandler.route(req, response, requestContext);
+        return Flow.GO;
     }
 }
