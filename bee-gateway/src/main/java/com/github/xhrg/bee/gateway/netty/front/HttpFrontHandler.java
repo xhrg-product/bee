@@ -6,8 +6,6 @@ import com.github.xhrg.bee.gateway.caller.Caller;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.util.ChannelKey;
-import com.github.xhrg.bee.gateway.util.ChannelUtils;
-import com.github.xhrg.bee.gateway.util.HttpUtilsExt;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -35,12 +33,15 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.debug("channelInactive, 链接关闭, channelId is {}", ctx.channel().id().asLongText());
+
         this.closeChannel(ctx.channel());
         super.channelInactive(ctx);
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
+        log.debug("channelRead0, 请求进来了, channelId is {}", ctx.channel().id().asLongText());
 
         HttpResponseExt httpResponseExt = new HttpResponseExt();
         HttpRequestExt httpRequestExt = new HttpRequestExt(request.copy());
@@ -63,8 +64,10 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.debug("FrontChannel Handler exceptionCaught");
-        cause.printStackTrace();
+        log.debug("exceptionCaught, 请求异常了, channelId is {}, Throwable is {}", ctx.channel().id().asLongText(), cause.getMessage());
+        if (log.isDebugEnabled()) {
+            log.debug("Throwable is, ", cause);
+        }
         if (cause instanceof IOException) {
             this.closeChannel(ctx.channel());
             return;

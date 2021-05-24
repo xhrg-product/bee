@@ -1,5 +1,11 @@
 #### 参考资料
 
+
+之前测试nginx：
+* nginx开启长链接，会维护到后台的链接池，请求过来后会复用链接。
+* 但是如果c端超时了，那么nginx会把自己到c端和自己到后台的这个链接都断掉
+
+
 参考项目：
 * https://github.com/adamfisk/LittleProxy
 * https://github.com/Netflix/zuul
