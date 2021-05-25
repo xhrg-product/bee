@@ -12,10 +12,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -43,8 +40,14 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        List<ApiRuntimeContext> list = this.getAll();
-        this.list = list;
+        try {
+            List<ApiRuntimeContext> list = this.getAll();
+            this.list = list;
+        } catch (Exception e) {
+            this.list = new ArrayList<>();
+            e.printStackTrace();
+            log.error("load api error, please check mysql connection");
+        }
     }
 
     public List<ApiRuntimeContext> getAll() {

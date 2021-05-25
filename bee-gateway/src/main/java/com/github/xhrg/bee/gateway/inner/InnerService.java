@@ -3,16 +3,16 @@ package com.github.xhrg.bee.gateway.inner;
 import com.github.xhrg.bee.gateway.api.Flow;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import io.netty.buffer.Unpooled;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.DefaultHttpResponse;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpVersion;
+import io.netty.handler.codec.http.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
 import javax.annotation.PostConstruct;
+import java.io.InputStream;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
@@ -20,12 +20,14 @@ import java.nio.file.Files;
 @Slf4j
 public class InnerService {
 
-    private byte[] body;
+    private byte[] body = new byte[0];
 
     @PostConstruct
     public void init() {
         try {
-            body = IOUtils.toByteArray(ResourceUtils.getFile("classpath:bee.ico").toURI());
+            ClassPathResource classPathResource = new ClassPathResource("bee.ico");
+            InputStream inputStream = classPathResource.getInputStream();
+            body = IOUtils.toByteArray(inputStream);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("read bee.ico error", e);
