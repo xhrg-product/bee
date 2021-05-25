@@ -89,9 +89,14 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
             httpResponseExt.addHeader("Connection", "close");
         }
         channelFront.writeAndFlush(httpResponseExt.full());
-        if (shutdown) {
-            channelFront.close();
-        }
+        //ChannelFuture channelFuture = channelFront.writeAndFlush(httpResponseExt.full());
+        //如果这里我把channelFront关闭了，假设客户端还没有来得及响应Connection:close的逻辑
+        //那么就会有新请求依然进来，这个时候，还是会有执行一半的问题, 所以优雅退出还是得依赖客户端的逻辑
+//        if (shutdown) {
+//            channelFuture.addListener(future -> {
+//                channelFront.close();
+//            });
+//        }
     }
 
     public void closeChannel(Channel channelFront) {
