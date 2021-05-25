@@ -13,6 +13,7 @@ public class Query {
     @RequestMapping("/query")
     public Object query() throws Exception {
         Map<String, Object> map = new HashMap<>();
+//        Thread.sleep(10000);
         map.put("name", "order");
         map.put("num", 100);
         return map;

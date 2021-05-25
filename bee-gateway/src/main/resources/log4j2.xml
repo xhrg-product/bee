@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
+<Configuration status="WARN" shutdownHook="disable">
+    <!--shutdownHook="disable"这个非常重要，如果不加这个，在优雅下线的代码中就无法使用日志组件了-->
     <Properties>
         <Property name="APP_ID" value="demo-service"/>
         <Property name="LOG_PATH" value="${sys:user.home}/data/logs/${APP_ID}"/>
