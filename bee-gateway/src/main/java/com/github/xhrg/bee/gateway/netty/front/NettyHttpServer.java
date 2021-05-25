@@ -3,6 +3,7 @@ package com.github.xhrg.bee.gateway.netty.front;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.EpollChannelOption;
+import io.netty.channel.nio.NioEventLoop;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -18,8 +19,6 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @Slf4j
@@ -87,6 +86,10 @@ public class NettyHttpServer implements ApplicationRunner, ApplicationListener<C
         try {
             log.info("bee-gateway stop netty, will stop boss and selector !");
             boss.shutdownGracefully().sync();
+
+            log.info("bee-gateway stop netty, shutdownAndWait !");
+            httpFrontHandler.shutdownAndWait();
+
             log.info("bee-gateway stop netty, stop boss done, will stop selector !");
             selector.shutdownGracefully().sync();
             log.info("bee-gateway success stop boss and selector!");
