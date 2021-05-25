@@ -9,7 +9,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -19,7 +18,8 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -30,7 +30,7 @@ public class NettyHttpServer implements ApplicationRunner, ApplicationListener<C
 
     private NioEventLoopGroup boss;
 
-    private NioEventLoopGroup worker;
+    private NioEventLoopGroup selector;
 
     @Value("${gateway.port:10000}")
     private int port;
@@ -44,9 +44,9 @@ public class NettyHttpServer implements ApplicationRunner, ApplicationListener<C
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         //boss线程一般是1，如果你是多端口监听，才是大于1的值
         boss = new NioEventLoopGroup(1);
-        worker = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
+        selector = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
         serverBootstrap
-                .group(boss, worker)
+                .group(boss, selector)
                 .channel(NioServerSocketChannel.class)
                 //linux下的单进程多端口
                 .option(EpollChannelOption.SO_REUSEPORT, true)
@@ -85,11 +85,11 @@ public class NettyHttpServer implements ApplicationRunner, ApplicationListener<C
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
         try {
-            log.info("bee-gateway stop netty, will stop boss and worker !");
+            log.info("bee-gateway stop netty, will stop boss and selector !");
             boss.shutdownGracefully().sync();
-            log.info("bee-gateway stop netty, stop boss done, will stop worker !");
-            worker.shutdownGracefully().sync();
-            log.info("bee-gateway success stop boss and worker!");
+            log.info("bee-gateway stop netty, stop boss done, will stop selector !");
+            selector.shutdownGracefully().sync();
+            log.info("bee-gateway success stop boss and selector!");
         } catch (Exception e) {
             e.printStackTrace();
         }
