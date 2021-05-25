@@ -20,7 +20,7 @@ import java.nio.file.Files;
 @Slf4j
 public class InnerService {
 
-    private byte[] body;
+    private byte[] body = new byte[0];
 
     @PostConstruct
     public void init() {

@@ -2,8 +2,7 @@ package com.github.xhrg.bee.gateway.netty.front;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
-import io.netty.channel.epoll.EpollChannelOption;
-import io.netty.channel.nio.NioEventLoop;
+import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -27,9 +26,15 @@ public class NettyHttpServer implements ApplicationRunner, ApplicationListener<C
     @Resource
     private HttpFrontHandler httpFrontHandler;
 
-    private NioEventLoopGroup boss;
+    private EventLoopGroup boss;
 
-    private NioEventLoopGroup selector;
+    private EventLoopGroup selector;
+
+    private static boolean isUseEpoll;
+
+    static {
+        isUseEpoll = useEpoll();
+    }
 
     @Value("${gateway.port:10000}")
     private int port;
@@ -42,25 +47,33 @@ public class NettyHttpServer implements ApplicationRunner, ApplicationListener<C
     public void start() throws Exception {
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         //boss线程一般是1，如果你是多端口监听，才是大于1的值
-        boss = new NioEventLoopGroup(1);
-        selector = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
-        serverBootstrap
-                .group(boss, selector)
-                .channel(NioServerSocketChannel.class)
-                //linux下的单进程多端口
-                .option(EpollChannelOption.SO_REUSEPORT, true)
 
-                .option(ChannelOption.SO_REUSEADDR, true)
-                .option(ChannelOption.SO_BACKLOG, 1024)
-                .option(ChannelOption.SO_REUSEADDR, true)
+        if (isUseEpoll) {
+            boss = new EpollEventLoopGroup(1);
+        } else {
+            boss = new NioEventLoopGroup(1);
+        }
+
+        if (isUseEpoll) {
+            selector = new EpollEventLoopGroup(Runtime.getRuntime().availableProcessors());
+        } else {
+            selector = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
+        }
+
+        serverBootstrap.group(boss, selector).channel(socketChannelClass());
+        //linux下的单进程多端口
+        if (isUseEpoll) {
+            serverBootstrap.option(EpollChannelOption.SO_REUSEPORT, true);
+            serverBootstrap.option(ChannelOption.SO_REUSEADDR, true);
+        }
+
+        serverBootstrap.option(ChannelOption.SO_BACKLOG, 1024)
                 .option(ChannelOption.SO_KEEPALIVE, false)
-
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.SO_SNDBUF, 65535)
                 .childOption(ChannelOption.SO_RCVBUF, 65535)
-
-                .childHandler(new ChannelInitializer<NioSocketChannel>() {
-                    protected void initChannel(NioSocketChannel ch) {
+                .childHandler(new ChannelInitializer<Channel>() {
+                    protected void initChannel(Channel ch) {
                         ChannelPipeline pipe = ch.pipeline();
                         pipe.addLast("encoder", new HttpResponseEncoder());
                         //HttpRequestDecoder有几个设置数据大小的参数，如果请求数据不大于这个参数，实际上这个参数也不用关注
@@ -96,5 +109,22 @@ public class NettyHttpServer implements ApplicationRunner, ApplicationListener<C
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static boolean useEpoll() {
+        String osName = System.getProperty("os.name");
+        if (osName != null && osName.toLowerCase().contains("linux") && Epoll.isAvailable()) {
+            log.info("userEpoll true");
+            return true;
+        }
+        log.info("useEpoll false");
+        return false;
+    }
+
+    private Class<? extends ServerChannel> socketChannelClass() {
+        if (isUseEpoll) {
+            return EpollServerSocketChannel.class;
+        }
+        return NioServerSocketChannel.class;
     }
 }
