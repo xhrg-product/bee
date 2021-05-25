@@ -33,15 +33,16 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        log.debug("channelActive, 链接创建, channelId is {}", ctx.channel().id().asLongText());
         allChannels.put(ctx.channel().id(), ctx.channel());
         super.channelActive(ctx);
     }
 
+    //当调用channel.close的时候，就会接下来触发channelInactive。
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.debug("channelInactive, 链接关闭, channelId is {}", ctx.channel().id().asLongText());
         allChannels.remove(ctx.channel().id(), ctx.channel());
-        this.closeChannel(ctx.channel());
         super.channelInactive(ctx);
     }
 
@@ -65,13 +66,13 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
     public void doReaderHttpRequest(HttpRequestExt req, HttpResponseExt httpResponseExt, RequestContext requestContext) {
         Flow flow = caller.doPre(req, httpResponseExt, requestContext);
         if (Flow.isEnd(flow)) {
-            requestContext.getChannelFront().writeAndFlush(httpResponseExt.full());
+            this.writeToFront(requestContext.getChannelFront(), httpResponseExt);
         }
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.debug("exceptionCaught, 请求异常了, channelId is {}, Throwable is {}", ctx.channel().id().asLongText(), cause.getMessage());
+        log.debug("exceptionCaught, 链接异常, channelId is {}, Throwable is {}", ctx.channel().id().asLongText(), cause.getMessage());
         if (log.isDebugEnabled()) {
             log.debug("Throwable is, ", cause);
         }
@@ -83,13 +84,18 @@ public class HttpFrontHandler extends SimpleChannelInboundHandler<FullHttpReques
     }
 
     public void writeToFront(Channel channelFront, HttpResponseExt httpResponseExt) {
+        log.debug("writeToFront channelId is {}", channelFront.id().asLongText());
         if (shutdown) {
             httpResponseExt.addHeader("Connection", "close");
         }
         channelFront.writeAndFlush(httpResponseExt.full());
+        if (shutdown) {
+            channelFront.close();
+        }
     }
 
     public void closeChannel(Channel channelFront) {
+        log.debug("closeChannel ,channelId is {}", channelFront.id().asLongText());
         Channel channelBack = channelFront.attr(ChannelKey.OTHER_CHANNEL).get();
         if (channelBack != null) {
             channelBack.close();

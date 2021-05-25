@@ -85,10 +85,12 @@ public class NettyHttpServer implements ApplicationRunner, ApplicationListener<C
     public void onApplicationEvent(ContextClosedEvent event) {
         try {
             log.info("bee-gateway stop netty, will stop boss and selector !");
-            boss.shutdownGracefully().sync();
+//            boss.shutdownGracefully().sync();
 
             log.info("bee-gateway stop netty, shutdownAndWait !");
             httpFrontHandler.shutdownAndWait();
+
+            Thread.sleep(100000000);
 
             log.info("bee-gateway stop netty, stop boss done, will stop selector !");
             selector.shutdownGracefully().sync();
