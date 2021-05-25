@@ -13,5 +13,10 @@ public class FilterBo {
 
     private String data;
 
-    private Object dynaData;
+    private Object dataExt;
+
+    @SuppressWarnings("unchecked")
+    public <E> E getDataExt() {
+        return (E) dataExt;
+    }
 }

@@ -11,14 +11,12 @@
     </parent>
 
     <artifactId>bee-gateway</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>bee-gateway</name>
 
     <dependencies>
         <dependency>
             <groupId>com.github.xhrg</groupId>
             <artifactId>bee-basic</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

@@ -11,8 +11,6 @@
     </parent>
 
     <artifactId>bee-admin</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>bee-admin</name>
 
     <dependencies>
         <dependency>
@@ -22,7 +20,6 @@
         <dependency>
             <groupId>com.github.xhrg</groupId>
             <artifactId>bee-basic</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>
