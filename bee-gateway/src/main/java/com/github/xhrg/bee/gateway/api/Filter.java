@@ -15,7 +15,7 @@ public interface Filter {
 
     //初始化，参数是FilterBo，可以根据FilterBo继承一个子类，然后在doFilter获取到。
     //注意，该接口绝对不能返回null
-    FilterBo init(FilterBo filterBo);
+    void init(FilterBo filterBo);
 
     //执行过滤器
     Flow doFilter(HttpRequestExt request,

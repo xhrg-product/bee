@@ -14,6 +14,7 @@ import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Bucket4j;
 import io.github.bucket4j.local.LocalBucket;
 import org.springframework.stereotype.Component;
+
 import java.time.Duration;
 
 @Component
@@ -21,24 +22,27 @@ public class RateLimiterFilter implements Filter {
     private static final String BUCKET_KEY = "bucket";
     private static final String HTTP_CODE = "httpCode";
     private static final String HTTP_BODY = "httpBody";
+
     @Override
     public String name() {
         return "rate_limiter";
     }
+
     @Override
     public FilterType type() {
         return FilterType.PRE;
     }
+
     @Override
-    public FilterBo init(FilterBo filterBo) {
+    public void init(FilterBo filterBo) {
         JSONObject jsonObject = JSON.parseObject(filterBo.getData());
         Bandwidth limit = Bandwidth.simple(jsonObject.getInteger("timesOfSecond"), Duration.ofSeconds(1));
         Bucket bucket = Bucket4j.builder().addLimit(limit).build();
         filterBo.putMapExt(BUCKET_KEY, bucket);
         filterBo.putMapExt(HTTP_CODE, jsonObject.getIntValue(HTTP_CODE));
         filterBo.putMapExt(HTTP_BODY, jsonObject.getString(HTTP_BODY));
-        return filterBo;
     }
+
     @Override
     public Flow doFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
         FilterBo filterBo = requestContext.getFilterBo();
@@ -51,6 +55,7 @@ public class RateLimiterFilter implements Filter {
         }
         return Flow.GO;
     }
+
     @Override
     public int sort() {
         return 0;

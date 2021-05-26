@@ -23,8 +23,7 @@ public class MockFilter implements Filter {
     }
 
     @Override
-    public FilterBo init(FilterBo filterBo) {
-        return filterBo;
+    public void init(FilterBo filterBo) {
     }
 
     @Override

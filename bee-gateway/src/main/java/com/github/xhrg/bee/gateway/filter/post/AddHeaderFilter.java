@@ -28,19 +28,18 @@ public class AddHeaderFilter implements Filter {
     }
 
     @Override
-    public FilterBo init(FilterBo filterBo) {
+    public void init(FilterBo filterBo) {
         Map<String, Object> map = new HashMap<>();
         JSONObject jsonObject = JSON.parseObject(filterBo.getData());
         for (Map.Entry<String, Object> e : jsonObject.entrySet()) {
             map.put(e.getKey(), e.getValue());
         }
-        filterBo.setDataExt(map);
-        return filterBo;
+        filterBo.setDynaObject(map);
     }
 
     @Override
     public Flow doFilter(HttpRequestExt request, HttpResponseExt response, RequestContext context) {
-        Map<String, Object> map = context.getFilterBo().getDataExt();
+        Map<String, Object> map = context.getFilterBo().getDynaObject();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             response.addHeader(entry.getKey(), entry.getValue());
         }

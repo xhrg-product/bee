@@ -74,11 +74,11 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
                 FilterBo filterBo = filterBoMap.get(apiBo.getId());
                 if (filterBo != null) {
                     boolean ok = filterHandler.isPre(filterBo.getName());
-                    FilterBo extFilterBo = filterHandler.extFilterBo(filterBo);
+                    filterHandler.initFilterBo(filterBo);
                     if (ok) {
-                        apiRuntimeContext.getPreFilter().add(extFilterBo);
+                        apiRuntimeContext.getPreFilter().add(filterBo);
                     } else {
-                        apiRuntimeContext.getPostFilter().add(extFilterBo);
+                        apiRuntimeContext.getPostFilter().add(filterBo);
                     }
                 }
                 apiRuntimeContextList.add(apiRuntimeContext);
