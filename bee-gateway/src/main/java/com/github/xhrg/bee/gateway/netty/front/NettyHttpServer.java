@@ -1,11 +1,11 @@
 package com.github.xhrg.bee.gateway.netty.front;
 
+import com.github.xhrg.bee.basic.util.SystemUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
@@ -65,10 +65,10 @@ public class NettyHttpServer implements ApplicationRunner, ApplicationListener<C
         if (isUseEpoll) {
             serverBootstrap.option(EpollChannelOption.SO_REUSEPORT, true);
             serverBootstrap.option(ChannelOption.SO_REUSEADDR, true);
-        }
 
+        }
         serverBootstrap.option(ChannelOption.SO_BACKLOG, 1024)
-                .option(ChannelOption.SO_KEEPALIVE, false)
+                //.option(ChannelOption.SO_KEEPALIVE, false),这个参数会报异常
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.SO_SNDBUF, 65535)
                 .childOption(ChannelOption.SO_RCVBUF, 65535)
@@ -87,7 +87,7 @@ public class NettyHttpServer implements ApplicationRunner, ApplicationListener<C
                 });
         ChannelFuture channelFuture = serverBootstrap.bind(this.port).sync();
         if (channelFuture.isSuccess()) {
-            log.info("netty server started, please visit http://127.0.0.1:{}/ping", this.port);
+            log.info("netty server started, please visit http://127.0.0.1:{}/ping or http://{}:{}/ping", this.port, SystemUtil.ip(), this.port);
         } else {
             log.error("netty server started fail, port is " + this.port + ", please check", channelFuture.cause());
         }
