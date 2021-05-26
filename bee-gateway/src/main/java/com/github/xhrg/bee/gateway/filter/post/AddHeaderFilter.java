@@ -34,13 +34,13 @@ public class AddHeaderFilter implements Filter {
         for (Map.Entry<String, Object> e : jsonObject.entrySet()) {
             map.put(e.getKey(), e.getValue());
         }
-        filterBo.setDynaData(map);
+        filterBo.setDataExt(map);
         return filterBo;
     }
 
     @Override
     public Flow doFilter(HttpRequestExt request, HttpResponseExt response, RequestContext context) {
-        Map<String, Object> map = (Map<String, Object>) context.getFilterBo().getDynaData();
+        Map<String, Object> map = context.getFilterBo().getDataExt();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             response.addHeader(entry.getKey(), entry.getValue());
         }
