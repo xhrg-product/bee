@@ -16,13 +16,13 @@ public class FilterBo {
 
     private String data;
 
-    private Object dataExt;
+    private Object dynaObject;
 
     private Map<String, Object> mapExt = new HashMap<>();
 
     @SuppressWarnings("unchecked")
-    public <E> E getDataExt() {
-        return (E) dataExt;
+    public <E> E getDynaObject() {
+        return (E) dynaObject;
     }
 
     @SuppressWarnings("unchecked")

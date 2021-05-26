@@ -74,14 +74,14 @@ public class FilterHandler implements BeanPostProcessor {
         return bean;
     }
 
-    public FilterBo extFilterBo(FilterBo filterBo) {
+    public void initFilterBo(FilterBo filterBo) {
         Filter filter = filtersPre.get(filterBo.getName());
         if (filter == null) {
             filter = filtersPost.get(filterBo.getName());
         }
         if (filter == null) {
-            return filterBo;
+            return;
         }
-        return filter.init(filterBo);
+        filter.init(filterBo);
     }
 }
