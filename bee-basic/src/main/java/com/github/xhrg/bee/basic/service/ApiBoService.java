@@ -36,7 +36,6 @@ public class ApiBoService {
 
     public Map<Integer, FilterBo> getAllFilter() {
         List<FilterMo> filterBos = filterMapper.getAll();
-
         Map<Integer, FilterBo> map = new HashMap<>();
 
         for (FilterMo filterPo : filterBos) {
@@ -44,7 +43,6 @@ public class ApiBoService {
             BeanUtils.copyProperties(filterPo, filterBo);
             map.put(filterPo.getApiId(), filterBo);
         }
-
         return map;
     }
 
