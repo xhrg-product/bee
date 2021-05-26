@@ -6,7 +6,7 @@
     <parent>
         <artifactId>bee</artifactId>
         <groupId>com.github.xhrg</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>bee-basic</artifactId>
