@@ -1,5 +1,7 @@
 package com.github.xhrg.bee.basic.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xhrg.bee.basic.bo.ApiBo;
 import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.basic.bo.RouterBo;
@@ -12,6 +14,7 @@ import com.github.xhrg.bee.basic.mapper.mo.RouterMo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.annotation.Resource;
@@ -67,6 +70,20 @@ public class ApiBoService {
             apiBos.add(apiBo);
         }
         return apiBos;
+    }
+
+    public List<ApiBo> getApisPage(int pageSize, int limitSize) {
+
+        QueryWrapper<ApiMo> wrapper = new QueryWrapper();
+        Page<ApiMo> page = new Page<>(pageSize, limitSize);
+        page = apiMapper.selectPage(page, wrapper);
+        List<ApiBo> listBo = new ArrayList<>();
+        for (ApiMo mo : page.getRecords()) {
+            ApiBo apiBo = new ApiBo();
+            BeanUtils.copyProperties(mo, apiBo);
+            listBo.add(apiBo);
+        }
+        return listBo;
     }
 
 }

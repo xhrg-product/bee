@@ -1,10 +1,12 @@
 package com.github.xhrg.bee.basic.mapper.mo;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
+@TableName("bee_api")
 public class ApiMo {
 
     private Integer id;
