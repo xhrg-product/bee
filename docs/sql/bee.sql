@@ -11,7 +11,7 @@
  Target Server Version : 50734
  File Encoding         : 65001
 
- Date: 26/05/2021 20:57:35
+ Date: 28/05/2021 00:36:12
 */
 
 SET NAMES utf8mb4;
@@ -26,13 +26,39 @@ CREATE TABLE `bee_api`  (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
   `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '描述',
+  `group_id` int(11) NULL DEFAULT NULL,
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
+  `user_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of bee_api
 -- ----------------------------
-INSERT INTO `bee_api` VALUES (1, '测试接口', '/demo', '无');
+INSERT INTO `bee_api` VALUES (1, '测试接口1', '/demo', '这是一个测试接口', 1, '2021-05-27 22:27:37', '2021-05-27 22:27:40', 'zhangsan');
+INSERT INTO `bee_api` VALUES (2, '测试接口2', '/demo2', 'aa', 1, '2021-05-27 23:22:20', '2021-05-27 23:22:22', 'wangwu');
+INSERT INTO `bee_api` VALUES (3, '测试接口3', '/demo3', 'aaa', 1, '2021-05-27 23:23:07', '2021-05-27 23:22:22', 'lisi');
+INSERT INTO `bee_api` VALUES (4, '1', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (5, '2', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (6, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (7, '4', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (8, '5', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (9, '6', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (10, 'a', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (11, 'b', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (12, 'a', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (13, 'g', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (14, 'f', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (15, 'v', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (16, 'u', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (17, 'i', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (18, 'v', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (19, 'o', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (20, 'y', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (21, 'n', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (22, 'm', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `bee_api` VALUES (23, 'f', NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for bee_api_group
