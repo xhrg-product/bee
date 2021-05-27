@@ -9,6 +9,5 @@ public class ResponseList {
 
     private List<?> items;
 
-    private int total;
-
+    private long total;
 }

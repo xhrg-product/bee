@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xhrg.bee.basic.bo.ApiBo;
 import com.github.xhrg.bee.basic.bo.FilterBo;
+import com.github.xhrg.bee.basic.bo.PageData;
 import com.github.xhrg.bee.basic.bo.RouterBo;
 import com.github.xhrg.bee.basic.mapper.ApiMapper;
 import com.github.xhrg.bee.basic.mapper.FilterMapper;
@@ -72,7 +73,7 @@ public class ApiBoService {
         return apiBos;
     }
 
-    public List<ApiBo> getApisPage(int pageSize, int limitSize) {
+    public PageData getApisPage(int pageSize, int limitSize) {
 
         QueryWrapper<ApiMo> wrapper = new QueryWrapper();
         Page<ApiMo> page = new Page<>(pageSize, limitSize);
@@ -83,7 +84,12 @@ public class ApiBoService {
             BeanUtils.copyProperties(mo, apiBo);
             listBo.add(apiBo);
         }
-        return listBo;
+
+        PageData pageData = new PageData();
+        pageData.setList(listBo);
+        pageData.setTotal((int) page.getTotal());
+
+        return pageData;
     }
 
 }

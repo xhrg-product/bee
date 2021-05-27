@@ -17,7 +17,7 @@ logging:
 
 ### 这个配置打印mybatis的日志
 mybatis-plus:
-  #  mapper-locations: classpath:mapper/*Mapper.xml
+#  mapper-locations: classpath*:mapper/*Mapper.xml
   #  type-aliases-package: com.github
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

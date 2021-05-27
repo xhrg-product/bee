@@ -7,11 +7,11 @@ import java.util.List;
 
 public abstract class ResponseUtils {
 
-    public static Response list(List<?> list) {
+    public static Response page(List<?> list, long total) {
         Response response = new Response();
         ResponseList responseList = new ResponseList();
         responseList.setItems(list);
-        responseList.setTotal(list.size());
+        responseList.setTotal(total);
         response.setData(responseList);
         return response;
     }
