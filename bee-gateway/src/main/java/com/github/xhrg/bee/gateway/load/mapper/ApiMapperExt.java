@@ -53,8 +53,7 @@ public class ApiMapperExt {
             BeanUtils.copyProperties(mo, filterData);
             map.put(mo.getApiId(), filterData);
         }
-
-        return null;
+        return map;
     }
 
     public Map<Integer, RouterData> getRouterMap() {
