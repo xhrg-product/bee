@@ -1,6 +1,5 @@
 package com.github.xhrg.bee.gateway.filter.pre;
 
-import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.gateway.api.Filter;
 import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.api.Flow;
@@ -29,7 +28,7 @@ public class MockFilter implements Filter {
 
     @Override
     public Flow doFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
-        response.setBody(requestContext.getFilterBo().getData());
+        response.setBody(requestContext.getFilterData().getData());
         return Flow.END;
     }
 

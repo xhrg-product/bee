@@ -2,7 +2,6 @@ package com.github.xhrg.bee.gateway.filter.pre;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.gateway.api.Filter;
 import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.api.Flow;
@@ -46,12 +45,12 @@ public class RateLimiterFilter implements Filter {
 
     @Override
     public Flow doFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
-        FilterBo filterBo = requestContext.getFilterBo();
-        LocalBucket localBucket = filterBo.getMapExtValue(BUCKET_KEY);
+        FilterData filterData = requestContext.getFilterData();
+        LocalBucket localBucket = filterData.getMapExtValue(BUCKET_KEY);
         boolean ok = localBucket.tryConsume(1);
         if (!ok) {
-            response.setHttpCode(filterBo.getMapExtValue(HTTP_CODE));
-            response.setBody(filterBo.getMapExtValue(HTTP_BODY));
+            response.setHttpCode(filterData.getMapExtValue(HTTP_CODE));
+            response.setBody(filterData.getMapExtValue(HTTP_BODY));
             return Flow.END;
         }
         return Flow.GO;

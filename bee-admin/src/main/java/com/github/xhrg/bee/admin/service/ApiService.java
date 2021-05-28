@@ -1,11 +1,11 @@
-package com.github.xhrg.bee.basic.service;
+package com.github.xhrg.bee.admin.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.xhrg.bee.basic.bo.ApiBo;
-import com.github.xhrg.bee.basic.bo.FilterBo;
-import com.github.xhrg.bee.basic.bo.PageData;
-import com.github.xhrg.bee.basic.bo.RouterBo;
+import com.github.xhrg.bee.admin.bo.ApiBo;
+import com.github.xhrg.bee.admin.bo.FilterBo;
+import com.github.xhrg.bee.admin.bo.PageData;
+import com.github.xhrg.bee.admin.bo.RouterBo;
 import com.github.xhrg.bee.basic.mapper.ApiMapper;
 import com.github.xhrg.bee.basic.mapper.FilterMapper;
 import com.github.xhrg.bee.basic.mapper.RouterMapper;
@@ -15,7 +15,6 @@ import com.github.xhrg.bee.basic.mapper.mo.RouterMo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.annotation.Resource;
@@ -26,7 +25,7 @@ import java.util.Map;
 
 @Service
 @Slf4j
-public class ApiBoService {
+public class ApiService {
 
     @Resource
     private ApiMapper apiMapper;

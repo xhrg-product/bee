@@ -1,6 +1,5 @@
 package com.github.xhrg.bee.gateway.filter;
 
-import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.gateway.api.Filter;
 import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.api.Flow;

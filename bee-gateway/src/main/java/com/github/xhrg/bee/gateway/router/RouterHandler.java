@@ -17,7 +17,7 @@ public class RouterHandler implements BeanPostProcessor {
     private Map<String, Router> mapRouter = new HashMap<>();
 
     public void route(HttpRequestExt req, HttpResponseExt response, RequestContext requestContext) {
-        Router router = mapRouter.get(requestContext.getApiRuntimeContext().getRouterBo().getName());
+        Router router = mapRouter.get(requestContext.getApiRuntimeContext().getRouterData().getName());
         router.doRouter(req, response, requestContext);
     }
 

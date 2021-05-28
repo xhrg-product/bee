@@ -1,4 +1,4 @@
-package com.github.xhrg.bee.basic.bo;
+package com.github.xhrg.bee.admin.bo;
 
 import lombok.Data;
 

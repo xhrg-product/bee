@@ -2,7 +2,6 @@ package com.github.xhrg.bee.gateway.filter.post;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.gateway.api.Filter;
 import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.api.Flow;
@@ -40,7 +39,7 @@ public class AddHeaderFilter implements Filter {
 
     @Override
     public Flow doFilter(HttpRequestExt request, HttpResponseExt response, RequestContext context) {
-        Map<String, Object> map = context.getFilterBo().getDynaObject();
+        Map<String, Object> map = context.getFilterData().getDynaObject();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             response.addHeader(entry.getKey(), entry.getValue());
         }

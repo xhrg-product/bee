@@ -1,6 +1,5 @@
 package com.github.xhrg.bee.gateway.api;
 
-import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.gateway.load.ApiRuntimeContext;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;

@@ -1,7 +1,7 @@
 package com.github.xhrg.bee.admin.util;
 
-import com.github.xhrg.bee.admin.dto.Response;
-import com.github.xhrg.bee.admin.dto.ResponseList;
+import com.github.xhrg.bee.admin.config.Response;
+import com.github.xhrg.bee.admin.config.ResponseList;
 
 import java.util.List;
 

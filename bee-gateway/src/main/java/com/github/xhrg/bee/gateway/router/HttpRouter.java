@@ -1,7 +1,6 @@
 package com.github.xhrg.bee.gateway.router;
 
 import com.alibaba.fastjson.JSON;
-import com.github.xhrg.bee.basic.bo.RouterBo;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.api.Router;
 import com.github.xhrg.bee.gateway.exp.BadException;
