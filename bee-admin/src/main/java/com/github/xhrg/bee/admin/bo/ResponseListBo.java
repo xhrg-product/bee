@@ -1,11 +1,11 @@
-package com.github.xhrg.bee.admin.config;
+package com.github.xhrg.bee.admin.bo;
 
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class ResponseList {
+public class ResponseListBo {
 
     private List<?> items;
 

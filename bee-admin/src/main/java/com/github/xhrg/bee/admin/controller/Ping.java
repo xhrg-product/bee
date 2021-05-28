@@ -1,4 +1,4 @@
-package com.github.xhrg.bee.admin.config;
+package com.github.xhrg.bee.admin.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

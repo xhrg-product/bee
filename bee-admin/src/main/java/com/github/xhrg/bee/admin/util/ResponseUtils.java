@@ -1,23 +1,23 @@
 package com.github.xhrg.bee.admin.util;
 
-import com.github.xhrg.bee.admin.config.Response;
-import com.github.xhrg.bee.admin.config.ResponseList;
+import com.github.xhrg.bee.admin.bo.ResponseBo;
+import com.github.xhrg.bee.admin.bo.ResponseListBo;
 
 import java.util.List;
 
 public abstract class ResponseUtils {
 
-    public static Response page(List<?> list, long total) {
-        Response response = new Response();
-        ResponseList responseList = new ResponseList();
+    public static ResponseBo page(List<?> list, long total) {
+        ResponseBo response = new ResponseBo();
+        ResponseListBo responseList = new ResponseListBo();
         responseList.setItems(list);
         responseList.setTotal(total);
         response.setData(responseList);
         return response;
     }
 
-    public static Response data(Object data) {
-        Response response = new Response();
+    public static ResponseBo data(Object data) {
+        ResponseBo response = new ResponseBo();
         response.setData(data);
         return response;
     }

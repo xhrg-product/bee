@@ -16,21 +16,6 @@ public class FilterBo {
 
     private String data;
 
-    private Object dynaObject;
+    private int status;
 
-    private Map<String, Object> mapExt = new HashMap<>();
-
-    @SuppressWarnings("unchecked")
-    public <E> E getDynaObject() {
-        return (E) dynaObject;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <E> E getMapExtValue(String key) {
-        return (E) mapExt.get(key);
-    }
-
-    public void putMapExt(String key, Object value) {
-        mapExt.put(key, value);
-    }
 }

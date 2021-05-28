@@ -24,4 +24,6 @@ public class ApiBo {
 
     private String userName;
 
+    private int status;
+
 }
