@@ -13,6 +13,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -23,23 +24,15 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class FilterHandler implements BeanPostProcessor {
 
-    private Map<String, Filter> filtersPre = new ConcurrentHashMap<>();
-
-    private Map<String, Filter> filtersPost = new ConcurrentHashMap<>();
-
-    private Map<Integer, String> sortMap = new TreeMap<>();
+    private Map<String, Filter> filters = new HashMap<>();
 
     public Flow pre(HttpRequestExt req, HttpResponseExt response, RequestContext requestContext) {
         List<FilterData> filterBoList = requestContext.getApiRuntimeContext().getPreFilter();
         for (FilterData filterData : filterBoList) {
-            Filter filter = filtersPre.get(filterData.getName());
-            //如果配置的过滤器，在本地过滤器没有找到，则跳过往下继续执行。
-            if (filter != null) {
-                requestContext.setFilterData(filterData);
-                Flow flow = filter.doFilter(req, response, requestContext);
-                if (Flow.isEnd(flow)) {
-                    return Flow.END;
-                }
+            requestContext.setFilterData(filterData);
+            Flow flow = filterData.getFilter().doFilter(req, response, requestContext);
+            if (Flow.isEnd(flow)) {
+                return Flow.END;
             }
         }
         return Flow.GO;
@@ -48,49 +41,24 @@ public class FilterHandler implements BeanPostProcessor {
     public Flow post(HttpRequestExt req, HttpResponseExt response, RequestContext requestContext) {
         List<FilterData> filterBoList = requestContext.getApiRuntimeContext().getPostFilter();
         for (FilterData filterData : filterBoList) {
-            Filter filter = filtersPost.get(filterData.getName());
-            //如果配置的过滤器，在本地过滤器没有找到，则跳过往下继续执行。
-            if (filter != null) {
-                requestContext.setFilterData(filterData);
-                Flow flow = filter.doFilter(req, response, requestContext);
-                if (Flow.isEnd(flow)) {
-                    return Flow.END;
-                }
+            requestContext.setFilterData(filterData);
+            Flow flow = filterData.getFilter().doFilter(req, response, requestContext);
+            if (Flow.isEnd(flow)) {
+                return Flow.END;
             }
         }
         return Flow.GO;
     }
 
-    public boolean isPre(String filterName) {
-        return filtersPre.containsKey(filterName);
-    }
-
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if (bean instanceof Filter) {
             Filter filter = (Filter) bean;
-            sortMap.put(filter.sort(), filter.name());
-            if (filter.type() == FilterType.PRE) {
-                filtersPre.put(filter.name(), filter);
-            } else {
-                filtersPost.put(filter.name(), filter);
-            }
+            filters.put(filter.name(), filter);
         }
         return bean;
     }
 
-    public void initFilterData(FilterData filterData) {
-        Filter filter = filtersPre.get(filterData.getName());
-        if (filter == null) {
-            filter = filtersPost.get(filterData.getName());
-        }
-        if (filter == null) {
-            return;
-        }
-        try {
-            filter.init(filterData);
-        } catch (Exception e) {
-            log.error("init filter error, " + filterData.getName(), e);
-            filterData.setDynaObject(new FilterException(e.getMessage()));
-        }
+    public Filter findFilter(String name) {
+        return filters.get(name);
     }
 }

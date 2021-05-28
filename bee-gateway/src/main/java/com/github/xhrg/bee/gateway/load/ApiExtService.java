@@ -1,5 +1,7 @@
 package com.github.xhrg.bee.gateway.load;
 
+import com.github.xhrg.bee.gateway.api.Filter;
+import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.filter.FilterHandler;
 import com.github.xhrg.bee.gateway.load.data.ApiData;
 import com.github.xhrg.bee.gateway.load.data.FilterData;
@@ -26,7 +28,6 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
 
     @Resource
     private ApiMapperExt apiMapperExt;
-
 
     private List<ApiRuntimeContext> list;
 
@@ -62,6 +63,7 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
             try {
                 ApiRuntimeContext apiRuntimeContext = new ApiRuntimeContext();
                 apiRuntimeContext.setApiData(apiData);
+                //设置router
                 RouterData routerData = routerBoMap.get(apiData.getId());
                 if (routerData == null) {
                     log.error(routerData.getName() + ", not match router");
@@ -69,21 +71,34 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
                 }
                 routerHandler.findRouter(routerData.getName()).init(routerData);
                 apiRuntimeContext.setRouterData(routerData);
+
+                //设置filter
                 List<FilterData> filterDataList = filterDataListMap.get(apiData.getId());
+
                 for (FilterData filterData : filterDataList) {
-                    boolean ok = filterHandler.isPre(filterData.getName());
-                    filterHandler.initFilterData(filterData);
-                    if (ok) {
+                    Filter filter = filterHandler.findFilter(filterData.getName());
+                    filter.init(filterData);
+                    if (filter.type() == FilterType.PRE) {
                         apiRuntimeContext.getPreFilter().add(filterData);
                     } else {
                         apiRuntimeContext.getPostFilter().add(filterData);
                     }
                 }
+                //对过滤器进行排序
+                Collections.sort(apiRuntimeContext.getPreFilter(), new FilterComparator());
+                Collections.sort(apiRuntimeContext.getPreFilter(), new FilterComparator());
                 apiRuntimeContextList.add(apiRuntimeContext);
             } catch (Exception e) {
                 log.error("load api error, skip this, api_name is " + apiData.getName(), e);
             }
         }
         return apiRuntimeContextList;
+    }
+
+    static class FilterComparator implements Comparator<FilterData> {
+        @Override
+        public int compare(FilterData o1, FilterData o2) {
+            return o1.getFilter().sort() - o2.getFilter().sort();
+        }
     }
 }
