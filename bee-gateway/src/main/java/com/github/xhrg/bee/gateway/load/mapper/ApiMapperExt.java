@@ -44,14 +44,21 @@ public class ApiMapperExt {
     }
 
 
-    public Map<Integer, FilterData> getFilterMap() {
+    public Map<Integer, List<FilterData>> getFilterMap() {
         List<FilterMo> filterMoList = filterMapper.getAll();
-        Map<Integer, FilterData> map = new HashMap<>();
+        Map<Integer, List<FilterData>> map = new HashMap<>();
 
         for (FilterMo mo : filterMoList) {
             FilterData filterData = new FilterData();
             BeanUtils.copyProperties(mo, filterData);
-            map.put(mo.getApiId(), filterData);
+            List<FilterData> list = map.get(mo.getApiId());
+            if (list != null) {
+                list.add(filterData);
+            } else {
+                list = new ArrayList<>();
+                list.add(filterData);
+                map.put(mo.getApiId(), list);
+            }
         }
         return map;
     }

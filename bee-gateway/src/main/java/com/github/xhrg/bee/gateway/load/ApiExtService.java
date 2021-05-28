@@ -54,9 +54,8 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
     public List<ApiRuntimeContext> getAll() {
         List<ApiData> apis = apiMapperExt.getApis();
 
-        Map<Integer, FilterData> filterBoMap = apiMapperExt.getFilterMap();
+        Map<Integer, List<FilterData>> filterDataListMap = apiMapperExt.getFilterMap();
         Map<Integer, RouterData> routerBoMap = apiMapperExt.getRouterMap();
-
         List<ApiRuntimeContext> apiRuntimeContextList = new ArrayList<>();
 
         for (ApiData apiData : apis) {
@@ -70,11 +69,10 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
                 }
                 routerHandler.findRouter(routerData.getName()).init(routerData);
                 apiRuntimeContext.setRouterData(routerData);
-
-                FilterData filterData = filterBoMap.get(apiData.getId());
-                if (filterData != null) {
+                List<FilterData> filterDataList = filterDataListMap.get(apiData.getId());
+                for (FilterData filterData : filterDataList) {
                     boolean ok = filterHandler.isPre(filterData.getName());
-                    filterHandler.initFilterBo(filterData);
+                    filterHandler.initFilterData(filterData);
                     if (ok) {
                         apiRuntimeContext.getPreFilter().add(filterData);
                     } else {
@@ -88,5 +86,4 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
         }
         return apiRuntimeContextList;
     }
-
 }

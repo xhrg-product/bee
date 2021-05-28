@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ApiMapper extends BaseMapper<ApiMo> {
 
-    @Select("select * from bee_api")
+    @Select("select * from bee_api where status = 1 ")
     List<ApiMo> getAll();
 }

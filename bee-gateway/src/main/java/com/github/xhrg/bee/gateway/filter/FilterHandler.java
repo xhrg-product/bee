@@ -4,9 +4,11 @@ import com.github.xhrg.bee.gateway.api.Filter;
 import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.api.Flow;
 import com.github.xhrg.bee.gateway.api.RequestContext;
+import com.github.xhrg.bee.gateway.exp.FilterException;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.load.data.FilterData;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,9 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+//过滤器控制类，主要有，缓存过滤器，执行过滤器，初始化过滤器
 @Service
+@Slf4j
 public class FilterHandler implements BeanPostProcessor {
 
     private Map<String, Filter> filtersPre = new ConcurrentHashMap<>();
@@ -74,7 +78,7 @@ public class FilterHandler implements BeanPostProcessor {
         return bean;
     }
 
-    public void initFilterBo(FilterData filterData) {
+    public void initFilterData(FilterData filterData) {
         Filter filter = filtersPre.get(filterData.getName());
         if (filter == null) {
             filter = filtersPost.get(filterData.getName());
@@ -82,6 +86,11 @@ public class FilterHandler implements BeanPostProcessor {
         if (filter == null) {
             return;
         }
-        filter.init(filterData);
+        try {
+            filter.init(filterData);
+        } catch (Exception e) {
+            log.error("init filter error, " + filterData.getName(), e);
+            filterData.setDynaObject(new FilterException(e.getMessage()));
+        }
     }
 }
