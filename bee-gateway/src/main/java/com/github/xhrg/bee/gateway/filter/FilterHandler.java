@@ -7,6 +7,7 @@ import com.github.xhrg.bee.gateway.api.Flow;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
+import com.github.xhrg.bee.gateway.load.data.FilterData;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Service;
@@ -26,12 +27,12 @@ public class FilterHandler implements BeanPostProcessor {
     private Map<Integer, String> sortMap = new TreeMap<>();
 
     public Flow pre(HttpRequestExt req, HttpResponseExt response, RequestContext requestContext) {
-        List<FilterBo> filterBoList = requestContext.getApiRuntimeContext().getPreFilter();
-        for (FilterBo filterBo : filterBoList) {
-            Filter filter = filtersPre.get(filterBo.getName());
+        List<FilterData> filterBoList = requestContext.getApiRuntimeContext().getPreFilter();
+        for (FilterData filterData : filterBoList) {
+            Filter filter = filtersPre.get(filterData.getName());
             //如果配置的过滤器，在本地过滤器没有找到，则跳过往下继续执行。
             if (filter != null) {
-                requestContext.setFilterBo(filterBo);
+                requestContext.setFilterData(filterData);
                 Flow flow = filter.doFilter(req, response, requestContext);
                 if (Flow.isEnd(flow)) {
                     return Flow.END;
@@ -42,12 +43,12 @@ public class FilterHandler implements BeanPostProcessor {
     }
 
     public Flow post(HttpRequestExt req, HttpResponseExt response, RequestContext requestContext) {
-        List<FilterBo> filterBoList = requestContext.getApiRuntimeContext().getPostFilter();
-        for (FilterBo filterBo : filterBoList) {
-            Filter filter = filtersPost.get(filterBo.getName());
+        List<FilterData> filterBoList = requestContext.getApiRuntimeContext().getPostFilter();
+        for (FilterData filterData : filterBoList) {
+            Filter filter = filtersPost.get(filterData.getName());
             //如果配置的过滤器，在本地过滤器没有找到，则跳过往下继续执行。
             if (filter != null) {
-                requestContext.setFilterBo(filterBo);
+                requestContext.setFilterData(filterData);
                 Flow flow = filter.doFilter(req, response, requestContext);
                 if (Flow.isEnd(flow)) {
                     return Flow.END;
@@ -74,14 +75,14 @@ public class FilterHandler implements BeanPostProcessor {
         return bean;
     }
 
-    public void initFilterBo(FilterBo filterBo) {
-        Filter filter = filtersPre.get(filterBo.getName());
+    public void initFilterBo(FilterData filterData) {
+        Filter filter = filtersPre.get(filterData.getName());
         if (filter == null) {
-            filter = filtersPost.get(filterBo.getName());
+            filter = filtersPost.get(filterData.getName());
         }
         if (filter == null) {
             return;
         }
-        filter.init(filterBo);
+        filter.init(filterData);
     }
 }

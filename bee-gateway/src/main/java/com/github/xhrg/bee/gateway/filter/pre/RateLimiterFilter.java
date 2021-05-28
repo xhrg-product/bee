@@ -9,6 +9,7 @@ import com.github.xhrg.bee.gateway.api.Flow;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
+import com.github.xhrg.bee.gateway.load.data.FilterData;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Bucket4j;
@@ -34,13 +35,13 @@ public class RateLimiterFilter implements Filter {
     }
 
     @Override
-    public void init(FilterBo filterBo) {
-        JSONObject jsonObject = JSON.parseObject(filterBo.getData());
+    public void init(FilterData filterData) {
+        JSONObject jsonObject = JSON.parseObject(filterData.getData());
         Bandwidth limit = Bandwidth.simple(jsonObject.getInteger("timesOfSecond"), Duration.ofSeconds(1));
         Bucket bucket = Bucket4j.builder().addLimit(limit).build();
-        filterBo.putMapExt(BUCKET_KEY, bucket);
-        filterBo.putMapExt(HTTP_CODE, jsonObject.getIntValue(HTTP_CODE));
-        filterBo.putMapExt(HTTP_BODY, jsonObject.getString(HTTP_BODY));
+        filterData.putMapExt(BUCKET_KEY, bucket);
+        filterData.putMapExt(HTTP_CODE, jsonObject.getIntValue(HTTP_CODE));
+        filterData.putMapExt(HTTP_BODY, jsonObject.getString(HTTP_BODY));
     }
 
     @Override

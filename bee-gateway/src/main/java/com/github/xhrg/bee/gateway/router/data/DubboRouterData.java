@@ -1,11 +1,10 @@
-package com.github.xhrg.bee.gateway.router.bo;
+package com.github.xhrg.bee.gateway.router.data;
 
-import com.github.xhrg.bee.basic.bo.RouterBo;
 import lombok.Data;
 import org.apache.dubbo.rpc.service.GenericService;
 
 @Data
-public class DubboRouterBo extends RouterBo {
+public class DubboRouterData {
 
     private GenericService genericService;
 

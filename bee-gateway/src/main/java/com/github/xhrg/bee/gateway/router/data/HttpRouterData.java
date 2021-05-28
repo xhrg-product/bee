@@ -1,10 +1,9 @@
-package com.github.xhrg.bee.gateway.router.bo;
+package com.github.xhrg.bee.gateway.router.data;
 
-import com.github.xhrg.bee.basic.bo.RouterBo;
 import lombok.Data;
 
 @Data
-public class HttpRouterBo extends RouterBo {
+public class HttpRouterData {
 
     private String host;
 

@@ -2,8 +2,8 @@ package com.github.xhrg.bee.gateway.router;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.github.xhrg.bee.basic.bo.RouterBo;
-import com.github.xhrg.bee.gateway.router.bo.DubboRouterBo;
+import com.github.xhrg.bee.gateway.load.data.RouterData;
+import com.github.xhrg.bee.gateway.router.data.DubboRouterData;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.api.Router;
 import com.github.xhrg.bee.gateway.caller.Caller;
@@ -26,11 +26,11 @@ public class DubboRouter implements Router {
     private Caller caller;
 
     @Override
-    public RouterBo init(RouterBo routerBo) {
+    public void init(RouterData routerData) {
 
-        DubboRouterBo dubboRouterBo = new DubboRouterBo();
+        DubboRouterData dubboRouterBo = new DubboRouterData();
 
-        JSONObject jsonObject = JSON.parseObject(routerBo.getData());
+        JSONObject jsonObject = JSON.parseObject(routerData.getData());
         RegistryConfig registryConfig = new RegistryConfig();
         registryConfig.setAddress(jsonObject.getString("zookeeper_addr"));
         ReferenceConfig<GenericService> reference = new ReferenceConfig<GenericService>();
@@ -47,15 +47,15 @@ public class DubboRouter implements Router {
         dubboRouterBo.setParamType(paramType);
         dubboRouterBo.setGenericService(genericService);
 
-        return dubboRouterBo;
+        routerData.setDynaObject(dubboRouterBo);
     }
 
     @Override
     public void doRouter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
         String body = request.getBody();
-        DubboRouterBo dubboRouterBo = (DubboRouterBo) requestContext.getApiRuntimeContext().getRouterBo();
-        CompletableFuture<Object> afuture = dubboRouterBo.getGenericService().$invokeAsync(dubboRouterBo.getMethod(),
-                dubboRouterBo.getParamType(), new Object[]{body});
+        DubboRouterData dubboRouterData = requestContext.getApiRuntimeContext().getRouterData().getDynaObject();
+        CompletableFuture<Object> afuture = dubboRouterData.getGenericService().$invokeAsync(dubboRouterData.getMethod(),
+                dubboRouterData.getParamType(), new Object[]{body});
         afuture.whenComplete((value, throwable) -> {
             if (throwable != null) {
                 response.setHttpCode(502);

@@ -6,7 +6,8 @@ import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.api.Router;
 import com.github.xhrg.bee.gateway.exp.BadException;
 import com.github.xhrg.bee.gateway.exp.DataException;
-import com.github.xhrg.bee.gateway.router.bo.HttpRouterBo;
+import com.github.xhrg.bee.gateway.load.data.RouterData;
+import com.github.xhrg.bee.gateway.router.data.HttpRouterData;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.netty.back.NettyHttpClient;
@@ -24,9 +25,9 @@ public class HttpRouter implements Router {
     private NettyHttpClient nettyHttpClient;
 
     @Override
-    public RouterBo init(RouterBo routerBo) {
-        HttpRouterBo httpRouterBo = JSON.parseObject(routerBo.getData(), HttpRouterBo.class);
-        BeanUtils.copyProperties(routerBo, httpRouterBo);
+    public void init(RouterData routerData) {
+        HttpRouterData httpRouterBo = JSON.parseObject(routerData.getData(), HttpRouterData.class);
+        BeanUtils.copyProperties(routerData, httpRouterBo);
         try {
             URL url = new URL(httpRouterBo.getTargetUrl());
             httpRouterBo.setHost(url.getHost());
@@ -35,17 +36,17 @@ public class HttpRouter implements Router {
         } catch (Exception e) {
             throw new DataException(e.getMessage());
         }
-        return httpRouterBo;
+        routerData.setDynaObject(httpRouterBo);
     }
 
     @Override
     public void doRouter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
         Channel channelFront = requestContext.getChannelFront();
         try {
-            HttpRouterBo httpRouterBo = (HttpRouterBo) requestContext.getApiRuntimeContext().getRouterBo();
+            HttpRouterData httpRouterData = requestContext.getApiRuntimeContext().getRouterData().getDynaObject();
             //重写URL
-            request.setUri(((HttpRouterBo) requestContext.getApiRuntimeContext().getRouterBo()).getTargetPath());
-            nettyHttpClient.write(request, channelFront, httpRouterBo.getHost(), httpRouterBo.getPort(), requestContext);
+            request.setUri(httpRouterData.getTargetPath());
+            nettyHttpClient.write(request, channelFront, httpRouterData.getHost(), httpRouterData.getPort(), requestContext);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BadException(e.getMessage());

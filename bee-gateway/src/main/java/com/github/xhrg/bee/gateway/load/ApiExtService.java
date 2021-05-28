@@ -3,8 +3,16 @@ package com.github.xhrg.bee.gateway.load;
 import com.github.xhrg.bee.basic.bo.ApiBo;
 import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.basic.bo.RouterBo;
+import com.github.xhrg.bee.basic.mapper.ApiMapper;
+import com.github.xhrg.bee.basic.mapper.FilterMapper;
+import com.github.xhrg.bee.basic.mapper.mo.ApiMo;
+import com.github.xhrg.bee.basic.mapper.mo.FilterMo;
 import com.github.xhrg.bee.basic.service.ApiBoService;
 import com.github.xhrg.bee.gateway.filter.FilterHandler;
+import com.github.xhrg.bee.gateway.load.data.ApiData;
+import com.github.xhrg.bee.gateway.load.data.FilterData;
+import com.github.xhrg.bee.gateway.load.data.RouterData;
+import com.github.xhrg.bee.gateway.load.mapper.ApiMapperExt;
 import com.github.xhrg.bee.gateway.router.RouterHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
@@ -19,19 +27,20 @@ import java.util.*;
 public class ApiExtService implements ApplicationListener<ContextRefreshedEvent> {
 
     @Resource
-    private ApiBoService apiBoService;
-
-    @Resource
     private FilterHandler filterHandler;
 
     @Resource
     private RouterHandler routerHandler;
 
+    @Resource
+    private ApiMapperExt apiMapperExt;
+
+
     private List<ApiRuntimeContext> list;
 
     public ApiRuntimeContext match(String path) {
         for (ApiRuntimeContext apiRunBo : list) {
-            if (Objects.equals(apiRunBo.getApiBo().getPath(), path)) {
+            if (Objects.equals(apiRunBo.getApiData().getPath(), path)) {
                 return apiRunBo;
             }
         }
@@ -51,39 +60,38 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
     }
 
     public List<ApiRuntimeContext> getAll() {
-        List<ApiBo> apis = apiBoService.getAllApis();
+        List<ApiData> apis = apiMapperExt.getApis();
 
-        Map<Integer, FilterBo> filterBoMap = apiBoService.getAllFilter();
-        Map<Integer, RouterBo> routerBoMap = apiBoService.getAllRouter();
+        Map<Integer, FilterData> filterBoMap = apiMapperExt.getFilterMap();
+        Map<Integer, RouterData> routerBoMap = apiMapperExt.getRouterMap();
 
         List<ApiRuntimeContext> apiRuntimeContextList = new ArrayList<>();
 
-        for (ApiBo apiBo : apis) {
+        for (ApiData apiData : apis) {
             try {
                 ApiRuntimeContext apiRuntimeContext = new ApiRuntimeContext();
-                apiRuntimeContext.setApiBo(apiBo);
-                RouterBo routerBo = routerBoMap.get(apiBo.getId());
-                if (routerBo == null) {
-                    log.error(apiBo.getName() + ", not match router");
+                apiRuntimeContext.setApiData(apiData);
+                RouterData routerData = routerBoMap.get(apiData.getId());
+                if (routerData == null) {
+                    log.error(routerData.getName() + ", not match router");
                     continue;
                 }
+                routerHandler.findRouter(routerData.getName()).init(routerData);
+                apiRuntimeContext.setRouterData(routerData);
 
-                RouterBo routerExtBo = routerHandler.findRouter(routerBo.getName()).init(routerBo);
-                apiRuntimeContext.setRouterBo(routerExtBo);
-
-                FilterBo filterBo = filterBoMap.get(apiBo.getId());
-                if (filterBo != null) {
-                    boolean ok = filterHandler.isPre(filterBo.getName());
-                    filterHandler.initFilterBo(filterBo);
+                FilterData filterData = filterBoMap.get(apiData.getId());
+                if (filterData != null) {
+                    boolean ok = filterHandler.isPre(filterData.getName());
+                    filterHandler.initFilterBo(filterData);
                     if (ok) {
-                        apiRuntimeContext.getPreFilter().add(filterBo);
+                        apiRuntimeContext.getPreFilter().add(filterData);
                     } else {
-                        apiRuntimeContext.getPostFilter().add(filterBo);
+                        apiRuntimeContext.getPostFilter().add(filterData);
                     }
                 }
                 apiRuntimeContextList.add(apiRuntimeContext);
             } catch (Exception e) {
-                log.error("load api error, skip this, api_name is " + apiBo.getName(), e);
+                log.error("load api error, skip this, api_name is " + apiData.getName(), e);
             }
         }
         return apiRuntimeContextList;
