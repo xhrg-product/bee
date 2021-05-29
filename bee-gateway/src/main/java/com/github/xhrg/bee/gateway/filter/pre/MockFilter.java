@@ -1,12 +1,12 @@
 package com.github.xhrg.bee.gateway.filter.pre;
 
-import com.github.xhrg.bee.basic.bo.FilterBo;
 import com.github.xhrg.bee.gateway.api.Filter;
 import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.api.Flow;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
+import com.github.xhrg.bee.gateway.load.data.FilterData;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,12 +23,12 @@ public class MockFilter implements Filter {
     }
 
     @Override
-    public void init(FilterBo filterBo) {
+    public void init(FilterData filterBo) {
     }
 
     @Override
     public Flow doFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
-        response.setBody(requestContext.getFilterBo().getData());
+        response.setBody(requestContext.getFilterData().getData());
         return Flow.END;
     }
 

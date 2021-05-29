@@ -1,11 +1,11 @@
-package com.github.xhrg.bee.basic.bo;
+package com.github.xhrg.bee.gateway.load.data;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class ApiBo {
+public class ApiData {
 
     private Integer id;
 
@@ -23,5 +23,4 @@ public class ApiBo {
     private Date updateTime;
 
     private String userName;
-
 }

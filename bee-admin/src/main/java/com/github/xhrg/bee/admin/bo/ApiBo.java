@@ -1,13 +1,11 @@
-package com.github.xhrg.bee.basic.mapper.mo;
+package com.github.xhrg.bee.admin.bo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-@TableName("bee_api")
-public class ApiMo {
+public class ApiBo {
 
     private Integer id;
 
@@ -22,8 +20,10 @@ public class ApiMo {
 
     private Date createTime;
 
-    private Data updateTime;
+    private Date updateTime;
 
     private String userName;
+
+    private int status;
 
 }

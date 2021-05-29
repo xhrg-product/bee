@@ -1,8 +1,8 @@
 package com.github.xhrg.bee.gateway.load;
 
-import com.github.xhrg.bee.basic.bo.ApiBo;
-import com.github.xhrg.bee.basic.bo.FilterBo;
-import com.github.xhrg.bee.basic.bo.RouterBo;
+import com.github.xhrg.bee.gateway.load.data.ApiData;
+import com.github.xhrg.bee.gateway.load.data.FilterData;
+import com.github.xhrg.bee.gateway.load.data.RouterData;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -13,11 +13,11 @@ import java.util.List;
 @Data
 public class ApiRuntimeContext {
 
-    private ApiBo apiBo;
+    private ApiData apiData;
 
-    private RouterBo routerBo;
+    private RouterData routerData;
 
-    private List<FilterBo> preFilter = new ArrayList<>();
+    private List<FilterData> preFilter = new ArrayList<>();
 
-    private List<FilterBo> postFilter = new ArrayList<>();
+    private List<FilterData> postFilter = new ArrayList<>();
 }

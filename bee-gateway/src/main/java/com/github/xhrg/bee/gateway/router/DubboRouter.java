@@ -2,8 +2,8 @@ package com.github.xhrg.bee.gateway.router;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.github.xhrg.bee.basic.bo.RouterBo;
-import com.github.xhrg.bee.gateway.router.bo.DubboRouterBo;
+import com.github.xhrg.bee.gateway.load.data.RouterData;
+import com.github.xhrg.bee.gateway.router.data.DubboRouterData;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.api.Router;
 import com.github.xhrg.bee.gateway.caller.Caller;
@@ -26,37 +26,42 @@ public class DubboRouter implements Router {
     private Caller caller;
 
     @Override
-    public RouterBo init(RouterBo routerBo) {
+    public void init(RouterData routerData) {
 
-        DubboRouterBo dubboRouterBo = new DubboRouterBo();
+        JSONObject jsonObject = JSON.parseObject(routerData.getData());
+        //这一步也可以改为系统配置的唯一zookeeper地址
+        String zookeeper = jsonObject.getString("zookeeper_addr");
+        String inf = jsonObject.getString("interface");
+        String method = jsonObject.getString("method");
+        String returnType = jsonObject.getString("returnType");
 
-        JSONObject jsonObject = JSON.parseObject(routerBo.getData());
+        DubboRouterData dubboRouterData = new DubboRouterData();
         RegistryConfig registryConfig = new RegistryConfig();
-        registryConfig.setAddress(jsonObject.getString("zookeeper_addr"));
+        registryConfig.setAddress(zookeeper);
+
         ReferenceConfig<GenericService> reference = new ReferenceConfig<GenericService>();
         reference.setRegistry(registryConfig);
         ApplicationModel.getConfigManager().setApplication(new ApplicationConfig("bee-gateway"));
-        reference.setInterface(jsonObject.getString("interface"));
+        reference.setInterface(inf);
         reference.setGeneric("true");
         reference.setAsync(true);
         GenericService genericService = reference.get();
-        String method = jsonObject.getString("method");
-        String[] paramType = new String[]{"java.lang.String"};
+        String[] paramType = new String[]{returnType};
 
-        dubboRouterBo.setMethod(method);
-        dubboRouterBo.setParamType(paramType);
-        dubboRouterBo.setGenericService(genericService);
+        dubboRouterData.setMethod(method);
+        dubboRouterData.setParamType(paramType);
+        dubboRouterData.setGenericService(genericService);
 
-        return dubboRouterBo;
+        routerData.setDynaObject(dubboRouterData);
     }
 
     @Override
     public void doRouter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
         String body = request.getBody();
-        DubboRouterBo dubboRouterBo = (DubboRouterBo) requestContext.getApiRuntimeContext().getRouterBo();
-        CompletableFuture<Object> afuture = dubboRouterBo.getGenericService().$invokeAsync(dubboRouterBo.getMethod(),
-                dubboRouterBo.getParamType(), new Object[]{body});
-        afuture.whenComplete((value, throwable) -> {
+        DubboRouterData dubboRouterData = requestContext.getApiRuntimeContext().getRouterData().getDynaObject();
+        CompletableFuture<Object> future = dubboRouterData.getGenericService().$invokeAsync(dubboRouterData.getMethod(),
+                dubboRouterData.getParamType(), new Object[]{body});
+        future.whenComplete((value, throwable) -> {
             if (throwable != null) {
                 response.setHttpCode(502);
                 response.setBody("dubbo error, " + throwable.getMessage());

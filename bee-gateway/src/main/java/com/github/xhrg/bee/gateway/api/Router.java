@@ -1,13 +1,12 @@
 package com.github.xhrg.bee.gateway.api;
 
-import com.github.xhrg.bee.basic.bo.FilterBo;
-import com.github.xhrg.bee.basic.bo.RouterBo;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
+import com.github.xhrg.bee.gateway.load.data.RouterData;
 
 public interface Router {
 
-    RouterBo init(RouterBo routerBo);
+    void init(RouterData routerData);
 
     void doRouter(HttpRequestExt request,
                   HttpResponseExt response, RequestContext requestContext);

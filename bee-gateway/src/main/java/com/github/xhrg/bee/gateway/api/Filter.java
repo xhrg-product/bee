@@ -1,9 +1,8 @@
 package com.github.xhrg.bee.gateway.api;
 
-import com.github.xhrg.bee.basic.bo.FilterBo;
-import com.github.xhrg.bee.basic.bo.RouterBo;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
+import com.github.xhrg.bee.gateway.load.data.FilterData;
 
 public interface Filter {
 
@@ -15,7 +14,7 @@ public interface Filter {
 
     //初始化，参数是FilterBo，可以根据FilterBo继承一个子类，然后在doFilter获取到。
     //注意，该接口绝对不能返回null
-    void init(FilterBo filterBo);
+    void init(FilterData filterData);
 
     //执行过滤器
     Flow doFilter(HttpRequestExt request,

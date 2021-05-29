@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--Configuration的status会被Loggers的级别覆盖-->
 <Configuration status="WARN" shutdownHook="disable">
     <!--shutdownHook="disable"这个非常重要，如果不加这个，在优雅下线的代码中就无法使用日志组件了-->
     <Properties>
-        <Property name="APP_ID" value="bee-gateway"/>
+        <Property name="APP_ID" value="bee-admin"/>
         <Property name="LOG_PATH" value="${sys:user.home}/data/logs/${APP_ID}"/>
     </Properties>
     <Appenders>
@@ -19,7 +20,6 @@
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
-
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
@@ -29,5 +29,9 @@
             <AppenderRef ref="RollingFile"/>
             <AppenderRef ref="Console"/>
         </AsyncRoot>
+        <!--这句话可以让这个包下的日志用这个配置的level运行,这个级别最高-->
+        <Logger name="com.github.xhrg.bee.basic.mapper" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
     </Loggers>
 </Configuration>

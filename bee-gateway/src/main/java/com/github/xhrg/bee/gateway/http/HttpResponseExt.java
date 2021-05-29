@@ -26,6 +26,9 @@ public class HttpResponseExt {
     private boolean isSetData = false;
 
     public FullHttpResponse full() {
+        //给所有的response增加header
+        //访问http接口,经常会遇到404,这个404是来自哪里的呢,有了这样的header就能看出来。
+        headers.put("proxy_server", "bee_gateway");
 
         if (fullHttpResponse != null && !isReadData && !isSetData) {
             for (Map.Entry<String, Object> entry : headers.entrySet()) {

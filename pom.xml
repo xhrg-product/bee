@@ -14,7 +14,7 @@
 
     <groupId>com.github.xhrg</groupId>
     <artifactId>bee</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.5-SNAPSHOT</version>
     <name>bee</name>
 
     <description>High performance gateway based on netty</description>

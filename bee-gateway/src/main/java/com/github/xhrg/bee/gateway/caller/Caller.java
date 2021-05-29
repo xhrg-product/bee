@@ -34,7 +34,6 @@ public class Caller {
 
     //执行后置过滤器，然后回写数据给前端
     public void doPost(HttpRequestExt req, HttpResponseExt response, RequestContext requestContext) {
-
         filterHandler.post(req, response, requestContext);
         //得到后台返回的响应，直接写会给前端
         httpFrontHandler.writeToFront(requestContext.getChannelFront(), response);
@@ -48,13 +47,13 @@ public class Caller {
             return flow;
         }
 
-        ApiRuntimeContext apiRunBo = apiExtService.match(url);
-        if (apiRunBo == null) {
+        ApiRuntimeContext apiRuntimeContext = apiExtService.match(url);
+        if (apiRuntimeContext == null) {
             response.setHttpCode(404);
-            response.setBody("not fund api");
+            response.setBody("not fund api by bee-gateway");
             return Flow.END;
         }
-        requestContext.setApiRuntimeContext(apiRunBo);
+        requestContext.setApiRuntimeContext(apiRuntimeContext);
 
         flow = filterHandler.pre(req, response, requestContext);
         if (Flow.isEnd(flow)) {

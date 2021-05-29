@@ -1,4 +1,4 @@
-package com.github.xhrg.bee.basic.bo;
+package com.github.xhrg.bee.gateway.load.data;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class FilterBo {
+public class RouterData {
 
     private Integer id;
 

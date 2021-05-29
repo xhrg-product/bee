@@ -1,9 +1,12 @@
-package com.github.xhrg.bee.basic.bo;
+package com.github.xhrg.bee.admin.bo;
 
 import lombok.Data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Data
-public class RouterBo {
+public class FilterBo {
 
     private Integer id;
 
@@ -12,5 +15,7 @@ public class RouterBo {
     private String name;
 
     private String data;
+
+    private int status;
 
 }
