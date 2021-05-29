@@ -50,7 +50,7 @@ public class Caller {
         ApiRuntimeContext apiRuntimeContext = apiExtService.match(url);
         if (apiRuntimeContext == null) {
             response.setHttpCode(404);
-            response.setBody("not fund api by bee gateway");
+            response.setBody("not fund api by bee-gateway");
             return Flow.END;
         }
         requestContext.setApiRuntimeContext(apiRuntimeContext);

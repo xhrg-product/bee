@@ -28,35 +28,40 @@ public class DubboRouter implements Router {
     @Override
     public void init(RouterData routerData) {
 
-        DubboRouterData dubboRouterBo = new DubboRouterData();
-
         JSONObject jsonObject = JSON.parseObject(routerData.getData());
+        //这一步也可以改为系统配置的唯一zookeeper地址
+        String zookeeper = jsonObject.getString("zookeeper_addr");
+        String inf = jsonObject.getString("interface");
+        String method = jsonObject.getString("method");
+        String returnType = jsonObject.getString("returnType");
+
+        DubboRouterData dubboRouterData = new DubboRouterData();
         RegistryConfig registryConfig = new RegistryConfig();
-        registryConfig.setAddress(jsonObject.getString("zookeeper_addr"));
+        registryConfig.setAddress(zookeeper);
+
         ReferenceConfig<GenericService> reference = new ReferenceConfig<GenericService>();
         reference.setRegistry(registryConfig);
         ApplicationModel.getConfigManager().setApplication(new ApplicationConfig("bee-gateway"));
-        reference.setInterface(jsonObject.getString("interface"));
+        reference.setInterface(inf);
         reference.setGeneric("true");
         reference.setAsync(true);
         GenericService genericService = reference.get();
-        String method = jsonObject.getString("method");
-        String[] paramType = new String[]{"java.lang.String"};
+        String[] paramType = new String[]{returnType};
 
-        dubboRouterBo.setMethod(method);
-        dubboRouterBo.setParamType(paramType);
-        dubboRouterBo.setGenericService(genericService);
+        dubboRouterData.setMethod(method);
+        dubboRouterData.setParamType(paramType);
+        dubboRouterData.setGenericService(genericService);
 
-        routerData.setDynaObject(dubboRouterBo);
+        routerData.setDynaObject(dubboRouterData);
     }
 
     @Override
     public void doRouter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
         String body = request.getBody();
         DubboRouterData dubboRouterData = requestContext.getApiRuntimeContext().getRouterData().getDynaObject();
-        CompletableFuture<Object> afuture = dubboRouterData.getGenericService().$invokeAsync(dubboRouterData.getMethod(),
+        CompletableFuture<Object> future = dubboRouterData.getGenericService().$invokeAsync(dubboRouterData.getMethod(),
                 dubboRouterData.getParamType(), new Object[]{body});
-        afuture.whenComplete((value, throwable) -> {
+        future.whenComplete((value, throwable) -> {
             if (throwable != null) {
                 response.setHttpCode(502);
                 response.setBody("dubbo error, " + throwable.getMessage());

@@ -6,5 +6,5 @@ spring:
     username: "root"
     password: "123456"
 gateway:
-  port: 10000
+  port: 10002
 

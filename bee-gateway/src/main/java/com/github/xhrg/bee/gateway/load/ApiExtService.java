@@ -74,7 +74,9 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
 
                 //设置filter
                 List<FilterData> filterDataList = filterDataListMap.get(apiData.getId());
-
+                if (filterDataList == null) {
+                    filterDataList = new ArrayList<>();
+                }
                 for (FilterData filterData : filterDataList) {
                     Filter filter = filterHandler.findFilter(filterData.getName());
                     filter.init(filterData);
