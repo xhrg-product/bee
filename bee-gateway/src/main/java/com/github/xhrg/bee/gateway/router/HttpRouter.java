@@ -10,6 +10,7 @@ import com.github.xhrg.bee.gateway.router.data.HttpRouterData;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.netty.back.NettyHttpClient;
+import com.github.xhrg.bee.gateway.util.PathMatcher;
 import io.netty.channel.Channel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -43,8 +44,11 @@ public class HttpRouter implements Router {
         Channel channelFront = requestContext.getChannelFront();
         try {
             HttpRouterData httpRouterData = requestContext.getApiRuntimeContext().getRouterData().getDynaObject();
-            //重写URL
-            request.setUri(httpRouterData.getTargetPath());
+            String pattern = requestContext.getApiRuntimeContext().getApiData().getPath();
+            String path = request.getUri();
+            String target = httpRouterData.getTargetPath();
+            String newPath = PathMatcher.toNewPath(pattern, path, target);
+            request.setUri(newPath);
             nettyHttpClient.write(request, channelFront, httpRouterData.getHost(), httpRouterData.getPort(), requestContext);
         } catch (Exception e) {
             e.printStackTrace();

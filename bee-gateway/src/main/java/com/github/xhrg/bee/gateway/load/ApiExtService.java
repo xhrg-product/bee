@@ -8,6 +8,7 @@ import com.github.xhrg.bee.gateway.load.data.FilterData;
 import com.github.xhrg.bee.gateway.load.data.RouterData;
 import com.github.xhrg.bee.gateway.load.mapper.ApiMapperExt;
 import com.github.xhrg.bee.gateway.router.RouterHandler;
+import com.github.xhrg.bee.gateway.util.PathMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -33,7 +34,8 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
 
     public ApiRuntimeContext match(String path) {
         for (ApiRuntimeContext apiRunBo : list) {
-            if (Objects.equals(apiRunBo.getApiData().getPath(), path)) {
+            boolean ok = PathMatcher.match(apiRunBo.getApiData().getPath(), path);
+            if (ok) {
                 return apiRunBo;
             }
         }
