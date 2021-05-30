@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 public class BodyChangeFilter implements Filter {
 
     private static final String JSON_OBJECT = "JSON_OBJECT";
-    private static final String VALUE_FILTER = "VALUE_FILTER";
 
     private static final String BODY_KEY = "body.";
     private static final String HEADER_KEY = "header.";
@@ -40,17 +39,13 @@ public class BodyChangeFilter implements Filter {
         String data = filterData.getData();
         JSONObject jsonObject = JSON.parseObject(data);
         filterData.putMapExt(JSON_OBJECT, jsonObject);
-        filterData.putMapExt(VALUE_FILTER, new BodyChangeFilter.SimpleValueFilter());
 
     }
 
     @Override
     public Flow doFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
         JSONObject jsonObject = requestContext.getFilterData().getMapExtValue(JSON_OBJECT);
-        SimpleValueFilter valueFilter = requestContext.getFilterData().getMapExtValue(VALUE_FILTER);
-        valueFilter.setHttpRequestExt(request);
-        valueFilter.setJsonBody(null);
-        String value = JSON.toJSONString(jsonObject, new BodyChangeFilter.SimpleValueFilter());
+        String value = JSON.toJSONString(jsonObject, new BodyChangeFilter.SimpleValueFilter(request));
         request.setBody(value);
         return Flow.GO;
     }
@@ -62,7 +57,8 @@ public class BodyChangeFilter implements Filter {
 
     @Data
     static class SimpleValueFilter implements ValueFilter {
-        public SimpleValueFilter() {
+        public SimpleValueFilter(HttpRequestExt httpRequestExt) {
+            this.httpRequestExt = httpRequestExt;
         }
 
         private HttpRequestExt httpRequestExt;
