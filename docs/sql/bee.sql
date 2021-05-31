@@ -1,14 +1,17 @@
 /*
  Navicat Premium Data Transfer
+
  Source Server         : 127.0.0.1
  Source Server Type    : MySQL
  Source Server Version : 50734
  Source Host           : localhost:3306
  Source Schema         : bee
+
  Target Server Type    : MySQL
  Target Server Version : 50734
  File Encoding         : 65001
- Date: 29/05/2021 10:39:17
+
+ Date: 30/05/2021 23:44:54
 */
 
 SET NAMES utf8mb4;
@@ -84,11 +87,12 @@ CREATE TABLE `bee_filter`  (
   `data` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `status` int(255) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of bee_filter
 -- ----------------------------
+INSERT INTO `bee_filter` VALUES (1, 'rate_limiter', 1, '{\"timesOfSecond\":\"1\",\"httpCode\":200,\"httpBody\":\"limit\"}', 1);
 
 -- ----------------------------
 -- Table structure for bee_router
@@ -106,7 +110,8 @@ CREATE TABLE `bee_router`  (
 -- Records of bee_router
 -- ----------------------------
 INSERT INTO `bee_router` VALUES (1, 'http', 'http://127.0.0.1:20000/bee-demo/query', 2);
-INSERT INTO `bee_router` VALUES (2, 'dubbo', '{\"zookeeper_addr\":\"zookeeper://127.0.0.1:2181\",\"interface\":\"com.github.xhrg.bee.demo.dubbo.HelloService\",\"method\":\"sayHello\",\"returnType\":\"java.lang.String\"}', 1);
+INSERT INTO `bee_router` VALUES (2, 'dubbo', '{\"zookeeper_addr\":\"zookeeper://127.0.0.1:2181\",\"interface\":\"com.github.xhrg.bee.demo.dubbo.HelloService\",\"method\":\"sayHello\",\"returnType\":\"java.lang.String\"}', 2);
+INSERT INTO `bee_router` VALUES (3, 'spring_cloud', '{\"service\":\"bee-demo\"}', 1);
 
 -- ----------------------------
 -- Table structure for bee_user
