@@ -55,8 +55,16 @@ public class HttpRequestExt {
         this.body = data;
     }
 
+    public String method() {
+        return fullHttpRequest.method().name().toLowerCase();
+    }
+
     public String uri() {
         return fullHttpRequest.uri();
+    }
+
+    public String header(String key) {
+        return fullHttpRequest.headers().get(key);
     }
 
     public String getBody() {

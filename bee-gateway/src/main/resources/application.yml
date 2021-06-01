@@ -5,6 +5,14 @@ spring:
     url: "jdbc:mysql://localhost/bee"
     username: "root"
     password: "123456"
-gateway:
-  port: 10002
 
+gateway:
+  port: 10000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:1111/eureka
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
