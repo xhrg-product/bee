@@ -1,5 +1,10 @@
 package com.github.xhrg.bee.gateway.filter.pre;
 
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.EntryType;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.Tracer;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.github.xhrg.bee.gateway.api.Filter;
 import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.api.Flow;
@@ -70,7 +75,31 @@ public class CircuitBreakerFilter implements Filter {
         return 0;
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
+
+
+        String id = "id";
+
+        Entry entry = null;
+        try {
+            entry = SphU.entry(id, EntryType.IN);
+            // Write your biz code here.
+            // <<BIZ CODE>>
+        } catch (Throwable t) {
+            if (!BlockException.isBlockException(t)) {
+                Tracer.trace(t);
+            }
+        } finally {
+            if (entry != null) {
+                entry.exit();
+            }
+        }
+
+
+
+    }
+
+    public static void main1(String[] args) throws Exception {
         CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom()
                 .failureRateThreshold(50)
                 .waitDurationInOpenState(Duration.ofSeconds(5))
