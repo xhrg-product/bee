@@ -20,7 +20,7 @@ import java.util.*;
 
 @Component
 @Slf4j
-public class ApiExtService implements ApplicationListener<ContextRefreshedEvent> {
+public class ApiLoadService implements ApplicationListener<ContextRefreshedEvent> {
 
     @Resource
     private FilterHandler filterHandler;

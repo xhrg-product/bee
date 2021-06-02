@@ -1,6 +1,6 @@
 package com.github.xhrg.bee.gateway.caller;
 
-import com.github.xhrg.bee.gateway.load.ApiExtService;
+import com.github.xhrg.bee.gateway.load.ApiLoadService;
 import com.github.xhrg.bee.gateway.load.ApiRuntimeContext;
 import com.github.xhrg.bee.gateway.api.Flow;
 import com.github.xhrg.bee.gateway.api.RequestContext;
@@ -24,7 +24,7 @@ public class Caller {
     private FilterHandler filterHandler;
 
     @Resource
-    private ApiExtService apiExtService;
+    private ApiLoadService apiExtService;
 
     @Resource
     private InnerService innerService;
