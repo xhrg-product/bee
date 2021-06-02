@@ -1,7 +1,8 @@
 package com.github.xhrg.bee.gateway.load;
 
 import com.github.xhrg.bee.gateway.api.Filter;
-import com.github.xhrg.bee.gateway.api.FilterType;
+import com.github.xhrg.bee.gateway.api.PostFilter;
+import com.github.xhrg.bee.gateway.api.PreFilter;
 import com.github.xhrg.bee.gateway.filter.FilterHandler;
 import com.github.xhrg.bee.gateway.load.data.ApiData;
 import com.github.xhrg.bee.gateway.load.data.FilterData;
@@ -81,18 +82,20 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
                 }
                 for (FilterData filterData : filterDataList) {
                     Filter filter = filterHandler.findFilter(filterData.getName());
-                    filterData.setFilter(filter);
                     //初始化filter数据
                     filter.init(filterData);
-                    if (filter.type() == FilterType.PRE) {
+                    if (filterHandler.isPre(filter)) {
+                        filterData.setPreFilter((PreFilter) filter);
                         apiRuntimeContext.getPreFilter().add(filterData);
-                    } else {
+                    }
+                    if (filterHandler.isPost(filter)) {
+                        filterData.setPostFilter((PostFilter) filter);
                         apiRuntimeContext.getPostFilter().add(filterData);
                     }
                 }
                 //对过滤器进行排序
-                Collections.sort(apiRuntimeContext.getPreFilter(), new FilterComparator());
-                Collections.sort(apiRuntimeContext.getPreFilter(), new FilterComparator());
+                Collections.sort(apiRuntimeContext.getPreFilter(), new FilterPreComparator());
+                Collections.sort(apiRuntimeContext.getPreFilter(), new FilterPostComparator());
                 apiRuntimeContextList.add(apiRuntimeContext);
             } catch (Exception e) {
                 log.error("load api error, skip this, api_name is " + apiData.getName(), e);
@@ -101,10 +104,17 @@ public class ApiExtService implements ApplicationListener<ContextRefreshedEvent>
         return apiRuntimeContextList;
     }
 
-    static class FilterComparator implements Comparator<FilterData> {
+    static class FilterPreComparator implements Comparator<FilterData> {
         @Override
         public int compare(FilterData o1, FilterData o2) {
-            return o1.getFilter().sort() - o2.getFilter().sort();
+            return o1.getPreFilter().sort() - o2.getPreFilter().sort();
+        }
+    }
+
+    static class FilterPostComparator implements Comparator<FilterData> {
+        @Override
+        public int compare(FilterData o1, FilterData o2) {
+            return o1.getPostFilter().sort() - o2.getPostFilter().sort();
         }
     }
 }

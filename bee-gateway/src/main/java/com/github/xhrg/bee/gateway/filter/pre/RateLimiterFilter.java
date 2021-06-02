@@ -2,9 +2,8 @@ package com.github.xhrg.bee.gateway.filter.pre;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.github.xhrg.bee.gateway.api.Filter;
-import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.api.Flow;
+import com.github.xhrg.bee.gateway.api.PreFilter;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 
 @Component
-public class RateLimiterFilter implements Filter {
+public class RateLimiterFilter implements PreFilter {
     private static final String BUCKET_KEY = "bucket";
     private static final String HTTP_CODE = "httpCode";
     private static final String HTTP_BODY = "httpBody";
@@ -26,11 +25,6 @@ public class RateLimiterFilter implements Filter {
     @Override
     public String name() {
         return "rate_limiter";
-    }
-
-    @Override
-    public FilterType type() {
-        return FilterType.PRE;
     }
 
     @Override
@@ -44,7 +38,7 @@ public class RateLimiterFilter implements Filter {
     }
 
     @Override
-    public Flow doFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
+    public Flow doPreFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
         FilterData filterData = requestContext.getFilterData();
         LocalBucket localBucket = filterData.getMapExtValue(BUCKET_KEY);
         boolean ok = localBucket.tryConsume(1);

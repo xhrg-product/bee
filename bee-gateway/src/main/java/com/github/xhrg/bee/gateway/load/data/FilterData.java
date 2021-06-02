@@ -1,6 +1,8 @@
 package com.github.xhrg.bee.gateway.load.data;
 
 import com.github.xhrg.bee.gateway.api.Filter;
+import com.github.xhrg.bee.gateway.api.PostFilter;
+import com.github.xhrg.bee.gateway.api.PreFilter;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -20,7 +22,9 @@ public class FilterData {
 
     private Object dynaObject;
 
-    private Filter filter;
+    private PreFilter preFilter;
+
+    private PostFilter postFilter;
 
     private Map<String, Object> mapExt = new HashMap<>();
 

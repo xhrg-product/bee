@@ -3,9 +3,8 @@ package com.github.xhrg.bee.gateway.filter.pre;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.ValueFilter;
-import com.github.xhrg.bee.gateway.api.Filter;
-import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.api.Flow;
+import com.github.xhrg.bee.gateway.api.PreFilter;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 //根据fastjson做参数转换
 @Component
-public class BodyChangeFilter implements Filter {
+public class BodyChangeFilter implements PreFilter {
 
     private static final String JSON_OBJECT = "JSON_OBJECT";
 
@@ -24,14 +23,8 @@ public class BodyChangeFilter implements Filter {
     private static final String HEADER_KEY = "header.";
 
     @Override
-
     public String name() {
         return "body_change";
-    }
-
-    @Override
-    public FilterType type() {
-        return FilterType.PRE;
     }
 
     @Override
@@ -43,7 +36,7 @@ public class BodyChangeFilter implements Filter {
     }
 
     @Override
-    public Flow doFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
+    public Flow doPreFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
         JSONObject jsonObject = requestContext.getFilterData().getMapExtValue(JSON_OBJECT);
         String value = JSON.toJSONString(jsonObject, new BodyChangeFilter.SimpleValueFilter(request));
         request.setBody(value);

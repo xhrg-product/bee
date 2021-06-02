@@ -5,9 +5,9 @@ import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.Tracer;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.github.xhrg.bee.gateway.api.Filter;
-import com.github.xhrg.bee.gateway.api.FilterType;
 import com.github.xhrg.bee.gateway.api.Flow;
+import com.github.xhrg.bee.gateway.api.PostFilter;
+import com.github.xhrg.bee.gateway.api.PreFilter;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.exp.BadException;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
@@ -18,18 +18,12 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.vavr.CheckedConsumer;
 import io.vavr.control.Try;
-import org.apache.dubbo.remoting.exchange.support.DefaultFuture;
 
 import java.time.Duration;
-import java.util.Random;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class CircuitBreakerFilter implements Filter {
-
+public class CircuitBreakerFilter implements PreFilter, PostFilter {
 
     @Override
     public String name() {
@@ -37,17 +31,11 @@ public class CircuitBreakerFilter implements Filter {
     }
 
     @Override
-    public FilterType type() {
-        return null;
-    }
-
-    @Override
     public void init(FilterData filterData) {
-
     }
 
     @Override
-    public Flow doFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
+    public Flow doPreFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
         // 为断路器创建自定义的配置
         CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom()
                 .failureRateThreshold(50)
@@ -77,9 +65,7 @@ public class CircuitBreakerFilter implements Filter {
 
     public static void main(String[] args) {
 
-
         String id = "id";
-
         Entry entry = null;
         try {
             entry = SphU.entry(id, EntryType.IN);
@@ -94,9 +80,6 @@ public class CircuitBreakerFilter implements Filter {
                 entry.exit();
             }
         }
-
-
-
     }
 
     public static void main1(String[] args) throws Exception {
@@ -112,7 +95,7 @@ public class CircuitBreakerFilter implements Filter {
         while (true) {
             Thread.sleep(50);
 
-            CheckedConsumer<Object> supplier =  CircuitBreaker.decorateCheckedConsumer(circuitBreaker, new CheckedConsumer<Object>() {
+            CheckedConsumer<Object> supplier = CircuitBreaker.decorateCheckedConsumer(circuitBreaker, new CheckedConsumer<Object>() {
                 @Override
                 public void accept(Object o) throws Throwable {
                     System.out.println(o);
@@ -165,5 +148,10 @@ public class CircuitBreakerFilter implements Filter {
 //
 //            future.get();
         }
+    }
+
+    @Override
+    public Flow doPostFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
+        return null;
     }
 }
