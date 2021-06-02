@@ -4,6 +4,7 @@ import com.github.xhrg.bee.gateway.load.ApiRuntimeContext;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.load.data.FilterData;
+import com.github.xhrg.bee.gateway.load.data.FilterDataReader;
 import io.netty.channel.Channel;
 import lombok.Data;
 
@@ -29,5 +30,9 @@ public class RequestContext {
     private ApiRuntimeContext apiRuntimeContext;
 
     //运行时候的过滤器对象
-    private FilterData filterData;
+    private FilterDataReader filterDataReader = new FilterDataReader();
+
+    public void setFilterData(FilterData filterData) {
+        filterDataReader.setFilterData(filterData);
+    }
 }

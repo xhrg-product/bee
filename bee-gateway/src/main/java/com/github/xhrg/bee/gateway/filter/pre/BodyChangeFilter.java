@@ -37,7 +37,7 @@ public class BodyChangeFilter implements PreFilter {
 
     @Override
     public Flow doPreFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
-        JSONObject jsonObject = requestContext.getFilterData().getMapExtValue(JSON_OBJECT);
+        JSONObject jsonObject = requestContext.getFilterDataReader().getMapExtValue(JSON_OBJECT);
         String value = JSON.toJSONString(jsonObject, new BodyChangeFilter.SimpleValueFilter(request));
         request.setBody(value);
         return Flow.GO;

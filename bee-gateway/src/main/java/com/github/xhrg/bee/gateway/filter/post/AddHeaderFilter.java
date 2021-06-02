@@ -33,7 +33,7 @@ public class AddHeaderFilter implements PostFilter {
 
     @Override
     public Flow doPostFilter(HttpRequestExt request, HttpResponseExt response, RequestContext context) {
-        Map<String, Object> map = context.getFilterData().getDynaObject();
+        Map<String, Object> map = context.getFilterDataReader().getDynaObject();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             response.addHeader(entry.getKey(), entry.getValue());
         }

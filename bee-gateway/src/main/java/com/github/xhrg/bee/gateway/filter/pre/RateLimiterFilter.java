@@ -39,12 +39,11 @@ public class RateLimiterFilter implements PreFilter {
 
     @Override
     public Flow doPreFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
-        FilterData filterData = requestContext.getFilterData();
-        LocalBucket localBucket = filterData.getMapExtValue(BUCKET_KEY);
+        LocalBucket localBucket = requestContext.getFilterDataReader().getMapExtValue(BUCKET_KEY);
         boolean ok = localBucket.tryConsume(1);
         if (!ok) {
-            response.setHttpCode(filterData.getMapExtValue(HTTP_CODE));
-            response.setBody(filterData.getMapExtValue(HTTP_BODY));
+            response.setHttpCode(requestContext.getFilterDataReader().getMapExtValue(HTTP_CODE));
+            response.setBody(requestContext.getFilterDataReader().getMapExtValue(HTTP_BODY));
             return Flow.END;
         }
         return Flow.GO;

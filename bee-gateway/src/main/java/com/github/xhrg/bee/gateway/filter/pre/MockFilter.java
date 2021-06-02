@@ -22,7 +22,7 @@ public class MockFilter implements PreFilter {
 
     @Override
     public Flow doPreFilter(HttpRequestExt request, HttpResponseExt response, RequestContext requestContext) {
-        response.setBody(requestContext.getFilterData().getData());
+        response.setBody(requestContext.getFilterDataReader().getData());
         return Flow.END;
     }
 

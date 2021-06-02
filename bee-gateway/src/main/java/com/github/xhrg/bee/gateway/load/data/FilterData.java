@@ -1,6 +1,5 @@
 package com.github.xhrg.bee.gateway.load.data;
 
-import com.github.xhrg.bee.gateway.api.Filter;
 import com.github.xhrg.bee.gateway.api.PostFilter;
 import com.github.xhrg.bee.gateway.api.PreFilter;
 import lombok.Data;
