@@ -1,4 +1,4 @@
-package com.github.xhrg.bee.gateway.filter.pre;
+package com.github.xhrg.bee.gateway.filter.all;
 
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.EntryType;
