@@ -18,8 +18,6 @@ import java.util.Map;
 @Slf4j
 public class FilterHandler implements BeanPostProcessor {
 
-    private Map<String, Filter> filters = new HashMap<>();
-
     private Map<String, PreFilter> preFilterMap = new HashMap<>();
 
     private Map<String, PostFilter> postFilterMap = new HashMap<>();
