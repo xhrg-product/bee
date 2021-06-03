@@ -29,7 +29,7 @@
             <AppenderRef ref="RollingFile"/>
             <AppenderRef ref="Console"/>
         </AsyncRoot>
-        <!--这句话可以让这个包下的日志用这个配置的level运行,这个级别最高-->
+        <!--这句话可以让这个包下的日志用这个配置的level运行,这个级别最高, 『这里的级别>application.yml>其他地方』 -->
         <Logger name="com.github.xhrg.bee.basic.mapper" level="debug" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>

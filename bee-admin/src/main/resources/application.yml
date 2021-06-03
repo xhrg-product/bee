@@ -2,7 +2,7 @@ spring:
   application:
     name: "bee-admin"
   datasource:
-    url: "jdbc:mysql://localhost/bee"
+    url: "jdbc:mysql://my_tx_server/bee"
     username: "root"
     password: "123456"
 server:
@@ -17,7 +17,7 @@ logging:
 
 ### 这个配置打印mybatis的日志
 mybatis-plus:
-#  mapper-locations: classpath*:mapper/*Mapper.xml
+  #  mapper-locations: classpath*:mapper/*Mapper.xml
   #  type-aliases-package: com.github
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

@@ -16,7 +16,8 @@ public class ApisController {
     private ApiService ApiService;
 
     @GetMapping("/list")
-    public Object list(@RequestParam("page") int page, @RequestParam("limit") int limit, @RequestParam("keyword") String keyword) {
+    public Object list(@RequestParam("page") int page, @RequestParam("limit") int limit,
+                       @RequestParam(value = "keyword", required = false) String keyword) {
         PageData pageReturn = ApiService.getApisPage(page, limit);
         return ResponseUtils.page(pageReturn.getList(), pageReturn.getTotal());
     }
