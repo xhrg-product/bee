@@ -12,4 +12,6 @@ public class FilterMo {
     private String name;
 
     private String data;
+
+    private int status;
 }

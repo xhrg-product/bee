@@ -26,4 +26,5 @@ public class ApiMo {
 
     private String userName;
 
+    private int status;
 }
