@@ -97,4 +97,10 @@ public class ApiService {
     public void deleteById(Integer id) {
         apiMapper.deleteById(id);
     }
+
+    public void insert(ApiBo apiBo) {
+        ApiMo apiMo = new ApiMo();
+        BeanUtils.copyProperties(apiBo, apiMo);
+        apiMapper.insert(apiMo);
+    }
 }

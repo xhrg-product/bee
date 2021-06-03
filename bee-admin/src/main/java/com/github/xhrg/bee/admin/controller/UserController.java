@@ -2,6 +2,8 @@ package com.github.xhrg.bee.admin.controller;
 
 
 import com.github.xhrg.bee.admin.util.ResponseUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,12 +15,12 @@ import java.util.Map;
 @RequestMapping("/user")
 public class UserController {
 
-    @RequestMapping("/login")
+    @PostMapping("/login")
     public Object login(Map<String, Object> map) {
         return ResponseUtils.data("mock_token");
     }
 
-    @RequestMapping("/info")
+    @GetMapping("/info")
     public Object info(Map<String, Object> map) {
         Map<String, Object> returnMap = new HashMap<>();
         returnMap.put("name", "mockName");//
