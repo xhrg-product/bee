@@ -83,7 +83,7 @@ public class CircuitBreakerFilter implements PreFilter, PostFilter {
             return Flow.GO;
         }
         if (response.getHttpCode() != 200) {
-            Tracer.trace(new FilterException("for cc"));
+            Tracer.trace(new FilterException("for " + this.getClass().toString()));
         }
         entry.close();
         return Flow.GO;
