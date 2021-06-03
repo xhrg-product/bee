@@ -25,18 +25,18 @@ public class ApisController {
     @PostMapping("/update")
     public Object update(@RequestBody ApiBo apiBo) {
         ApiService.updateById(apiBo);
-        return "success";
+        return ResponseUtils.data("success");
     }
 
     @PostMapping("/insert")
     public Object insert(@RequestBody ApiBo apiBo) {
         ApiService.insert(apiBo);
-        return "success";
+        return ResponseUtils.data("success");
     }
 
     @PostMapping("/delete")
     public Object delete(@RequestBody Integer id) {
         ApiService.deleteById(id);
-        return "success";
+        return ResponseUtils.data("success");
     }
 }
