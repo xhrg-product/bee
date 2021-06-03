@@ -24,6 +24,7 @@ public class ApiBo {
 
     private String userName;
 
+    //1开启，2禁用
     private int status;
 
 }

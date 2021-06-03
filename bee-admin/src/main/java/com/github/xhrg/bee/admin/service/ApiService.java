@@ -73,7 +73,6 @@ public class ApiService {
     }
 
     public PageData getApisPage(int pageSize, int limitSize) {
-
         QueryWrapper<ApiMo> wrapper = new QueryWrapper();
         Page<ApiMo> page = new Page<>(pageSize, limitSize);
         page = apiMapper.selectPage(page, wrapper);
@@ -83,12 +82,19 @@ public class ApiService {
             BeanUtils.copyProperties(mo, apiBo);
             listBo.add(apiBo);
         }
-
         PageData pageData = new PageData();
         pageData.setList(listBo);
         pageData.setTotal((int) page.getTotal());
-
         return pageData;
     }
 
+    public void updateById(ApiBo apiBo) {
+        ApiMo apiMo = new ApiMo();
+        BeanUtils.copyProperties(apiBo, apiMo);
+        apiMapper.updateById(apiMo);
+    }
+
+    public void deleteById(Integer id) {
+        apiMapper.deleteById(id);
+    }
 }
