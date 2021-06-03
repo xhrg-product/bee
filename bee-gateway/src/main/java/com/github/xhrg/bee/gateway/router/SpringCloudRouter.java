@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 
-//TODO 需要改为异步执行
+//TODO需要改为异步执行
 @Component
 public class SpringCloudRouter implements Router {
 
@@ -47,7 +47,9 @@ public class SpringCloudRouter implements Router {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         String service = requestContext.getApiRuntimeContext().getRouterData().getMapExtValue("service");
         String path = request.getUri();
+
         String body = this.restTemplate.postForObject("http://" + service + path, map, String.class);
+
         response.setBody(body);
         caller.doPost(request, response, requestContext);
     }
