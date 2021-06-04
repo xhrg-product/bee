@@ -3,12 +3,13 @@ package com.github.xhrg.bee.gateway.filter.pre;
 import com.github.xhrg.bee.gateway.api.Flow;
 import com.github.xhrg.bee.gateway.api.PreFilter;
 import com.github.xhrg.bee.gateway.api.RequestContext;
+import com.github.xhrg.bee.gateway.filter.FilterSort;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.load.data.FilterData;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class MockFilter implements PreFilter {
 
     @Override
@@ -28,6 +29,6 @@ public class MockFilter implements PreFilter {
 
     @Override
     public int sort() {
-        return 0;
+        return FilterSort.MockFilter;
     }
 }

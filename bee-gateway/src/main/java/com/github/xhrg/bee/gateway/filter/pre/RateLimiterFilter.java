@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.xhrg.bee.gateway.api.Flow;
 import com.github.xhrg.bee.gateway.api.PreFilter;
 import com.github.xhrg.bee.gateway.api.RequestContext;
+import com.github.xhrg.bee.gateway.filter.FilterSort;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.load.data.FilterData;
@@ -51,6 +52,6 @@ public class RateLimiterFilter implements PreFilter {
 
     @Override
     public int sort() {
-        return 0;
+        return FilterSort.RateLimiterFilter;
     }
 }

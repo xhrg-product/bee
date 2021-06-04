@@ -15,6 +15,7 @@ import com.github.xhrg.bee.gateway.api.PostFilter;
 import com.github.xhrg.bee.gateway.api.PreFilter;
 import com.github.xhrg.bee.gateway.api.RequestContext;
 import com.github.xhrg.bee.gateway.exp.FilterException;
+import com.github.xhrg.bee.gateway.filter.FilterSort;
 import com.github.xhrg.bee.gateway.http.HttpRequestExt;
 import com.github.xhrg.bee.gateway.http.HttpResponseExt;
 import com.github.xhrg.bee.gateway.load.data.FilterData;
@@ -91,7 +92,7 @@ public class CircuitBreakerFilter implements PreFilter, PostFilter {
 
     @Override
     public int sort() {
-        return 0;
+        return FilterSort.CircuitBreakerFilter;
     }
 
     @Override
