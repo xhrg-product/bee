@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/apis")
+@RequestMapping("/filter")
 public class FilterController {
 
     @Resource
     private FilterService filterService;
 
-    @PostMapping("/update")
+    @PostMapping("/queryByApiId")
     public Object queryByApiId(@RequestBody FilterBo filterBo) {
         return filterService.queryByApiId(filterBo.getApiId());
     }

@@ -12,6 +12,7 @@ public class Ping {
 
     @GetMapping("/ping")
     public Object ping(HttpServletRequest httpRequest) {
+        int i = 1 / 0;
         return "pong";
     }
 }

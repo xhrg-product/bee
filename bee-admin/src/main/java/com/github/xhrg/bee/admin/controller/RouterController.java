@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/apis")
+@RequestMapping("/router")
 public class RouterController {
 
     @Resource
     private RouterService routerService;
 
-    @PostMapping("/update")
+    @PostMapping("/queryByApiId")
     public Object queryByApiId(@RequestBody RouterBo routerBo) {
         return routerService.queryByApiId(routerBo.getApiId());
     }
