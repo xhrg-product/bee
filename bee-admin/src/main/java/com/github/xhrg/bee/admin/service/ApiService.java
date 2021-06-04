@@ -83,7 +83,7 @@ public class ApiService {
             listBo.add(apiBo);
         }
         PageData pageData = new PageData();
-        pageData.setList(listBo);
+        pageData.setItems(listBo);
         pageData.setTotal((int) page.getTotal());
         return pageData;
     }
