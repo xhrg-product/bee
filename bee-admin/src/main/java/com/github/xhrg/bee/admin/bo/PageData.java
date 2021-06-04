@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class PageData {
 
-    private List<?> list;
+    private List<?> items;
 
     private int total;
 
