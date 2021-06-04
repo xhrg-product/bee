@@ -10,5 +10,4 @@ public class PageData {
     private List<?> items;
 
     private int total;
-
 }

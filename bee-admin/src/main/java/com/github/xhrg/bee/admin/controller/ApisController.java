@@ -34,8 +34,8 @@ public class ApisController {
     }
 
     @PostMapping("/delete")
-    public Object delete(@RequestBody Integer id) {
-        ApiService.deleteById(id);
+    public Object delete(@RequestBody ApiBo apiBo) {
+        ApiService.deleteById(apiBo.getId());
         return "success";
     }
 }

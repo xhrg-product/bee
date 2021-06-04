@@ -45,9 +45,9 @@ public class HttpRouter implements Router {
         try {
             HttpRouterData httpRouterData = requestContext.getApiRuntimeContext().getRouterData().getDynaObject();
             String pattern = requestContext.getApiRuntimeContext().getApiData().getPath();
-            String path = request.getUri();
+            String uri = request.getUri();
             String target = httpRouterData.getTargetPath();
-            String newPath = PathMatcher.toNewPath(pattern, path, target);
+            String newPath = PathMatcher.toNewPath(pattern, uri, target);
             request.setUri(newPath);
             nettyHttpClient.write(request, channelFront, httpRouterData.getHost(), httpRouterData.getPort(), requestContext);
         } catch (Exception e) {
