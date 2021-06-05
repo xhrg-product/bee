@@ -2,7 +2,7 @@ package com.github.xhrg.bee.basic.mapper.mo;
 
 public class LogMo {
 
-    private int id;
+    private Integer id;
 
     private String userName;
 

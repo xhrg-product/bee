@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
+//如果没有这个配置，当Controller层返回String类型，但是Advice返回对象的时候，会包ClassCase错误
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
