@@ -36,7 +36,6 @@ public class ApiService {
     @Resource
     private FilterMapper filterMapper;
 
-
     public Map<Integer, FilterBo> getAllFilter() {
         List<FilterMo> filterBos = filterMapper.getAll();
         Map<Integer, FilterBo> map = new HashMap<>();
@@ -53,9 +52,9 @@ public class ApiService {
         List<RouterMo> routerPos = routerMapper.getAll();
         Map<Integer, RouterBo> map = new HashMap<>();
 
-        for (RouterMo routerpo : routerPos) {
+        for (RouterMo routerPo : routerPos) {
             RouterBo routerBo = new RouterBo();
-            BeanUtils.copyProperties(routerpo, routerBo);
+            BeanUtils.copyProperties(routerPo, routerBo);
             map.put(routerBo.getApiId(), routerBo);
         }
         return map;

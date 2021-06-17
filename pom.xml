@@ -14,12 +14,13 @@
 
     <groupId>com.github.xhrg</groupId>
     <artifactId>bee</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>${revision}</version>
     <name>bee</name>
 
     <description>High performance gateway based on netty</description>
 
     <properties>
+        <revision>0.0.5-SNAPSHOT</revision>
         <java.version>1.8</java.version>
         <spring-boot-dependencies.version>2.4.5</spring-boot-dependencies.version>
         <spring-boot-mybatis.version>2.1.4</spring-boot-mybatis.version>
